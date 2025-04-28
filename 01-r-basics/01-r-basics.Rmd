@@ -1,0 +1,91 @@
+---
+title: "R Básico: comenzando un viaje"
+date: "Abril, 2025"
+author: "" 
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      countIncrementalSlides: false
+      beforeInit: "https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/macros.js"
+      slideNumberFormat: |
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
+          </div>
+        </div>
+    css: ["https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/xaringan-coes.css","https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"]
+    seal: false # esto omite title slide automática  
+---
+layout: true
+class: animated, fadeIn
+
+---
+class: inverse, left, middle
+
+# _R Básico: comenzando un viaje_
+
+
+Martín Venegas Márquez
+
+
+***
+[Doctorado en Psicología UDP - Seminario Metodológico Disciplinario: Metodologías Cuantitativas - Otoño 2025]()
+
+<br>
+
+#### Abril, 2025
+
+---
+class: inverse, left, middle
+
+# Contenidos de la sesión
+
+**1. ¿Por qué utilizar R?**
+
+--
+
+**2. ¿Qué es R? ¿Qué es RStudio?**
+
+--
+
+**3. Fundamentales de R**
+
+---
+class: middle, center, inverse
+
+# _1. ¿Por qué utilizar R?_
+
+---
+
+# Razón estrategica (🎯): demanda profesional y académica 
+
+- R es altamente demandado en el mercado laboral y en la academia. Es una herramienta clave para investigadores, analistas de datos y científicos en todo el mundo.
+
+
+---
+
+# Razón técnica (🔧): potencia y flexibilidad
+
+- R es una herramienta poderosa y flexible que te permite manejar datos complejos, crear gráficos personalizados y automatizar análisis.
+
+--
+
+- Es gratuito, personalizable y ideal para trabajar con grandes volúmenes de datos.
+
+> En R no solo haces análisis, creas soluciones.
+
+---
+
+# Razón ética (👌): reproducibilidad en la ciencia
+
+- La reproducibilidad es clave para una ciencia sólida y transparente. R permite documentar todos los pasos del análisis, asegurando que otros puedan replicarlo y verificarlo.
+
+> R promueve la transparencia y la reproducibilidad en la ciencia."
+
+---
+class: middle, center, inverse
+
+# _1. ¿Qué es R? ¿Qué es RStudio?_
+
+---
