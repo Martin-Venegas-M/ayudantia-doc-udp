@@ -4,7 +4,16 @@
     <title>R Básico: comenzando un viaje</title>
     <meta charset="utf-8" />
     <meta name="author" content="" />
-    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.26/header-attrs.js"></script>
+    <link href="libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+    <script src="libs/plotly-binding-4.10.4/plotly.js"></script>
+    <script src="libs/typedarray-0.1/typedarray.min.js"></script>
+    <script src="libs/jquery-3.5.1/jquery.min.js"></script>
+    <link href="libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+    <script src="libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+    <link href="libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+    <script src="libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
     <link rel="stylesheet" href="https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/xaringan-coes.css" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" type="text/css" />
   </head>
@@ -17,7 +26,7 @@ class: animated, fadeIn
 ---
 class: inverse, left, middle
 
-# _R Básico: comenzando un viaje_
+# _R Básico: comenzando un viaje 🚀_
 
 
 Martín Venegas Márquez
@@ -35,6 +44,8 @@ class: inverse, left, middle
 
 # Contenidos de la sesión
 
+--
+
 **1. ¿Por qué utilizar R?**
 
 --
@@ -48,17 +59,625 @@ class: inverse, left, middle
 ---
 class: middle, center, inverse
 
-# _¿Qué es el control de versiones?_
+# _1. ¿Por qué utilizar R?_
+
+---
+
+# 🎯Razón estrategica: demanda profesional y académica 
+
+- Muchas organizaciones, universidades, ONGs, consultoras e institutos públicos **buscan investigadores que manejen R**.
+
+- Tener dominio de R:
+
+  * **Abre puertas** en investigación, análisis de datos, políticas públicas, consultoría, psicometría, etc.
+
+  * Mejora la empleabilidad, ya que el **análisis de datos es una habilidad transversal** a muchos campos y disciplinas.
+
+- Además, **R es gratuito** y no depende de licencias caras, lo que facilita su uso profesional sin costo extra.
+
+---
+# 🎯Razón estrategica: demanda profesional y académica 
+
+- Cada vez más artículos científicos, especialmente en ciencias sociales, psicología, salud y economía, publican sus análisis hechos en R.
+
+- **Revistas de alto impacto exigen códigos reproducibles para aceptar publicaciones**.
+
+  * 🤓**Ejemplo:** desde 2021 _[Nature](https://www.nature.com/nature-portfolio/editorial-policies/reporting-standards)_ exige que los autores proporcionen datos y código para la revisión de los pares y la publicación, siempre que sea posible.
+
+- Aprender R permite estar alineado con las mejores prácticas de la ciencia actual.
+
+---
+
+# 🔧 Razón técnica: potencia y flexibilidad
+
+- R es una herramienta poderosa y flexible que permite manejar datos complejos, crear gráficos personalizados y automatizar análisis.
+
+- Entre otras cosas, podemos:
+
+  ✅Emplear múltiples técnicas estadísticas de manera relativamente sencilla
+
+  ✅ Crear nuestras propias funciones.
+
+  ✅ Automatizar reportes.
+
+  ✅ Diseñar gráficos personalizados.
+
+- No está limitado a las **opciones de un menú**.
+
+---
+# R v/s Stata, SPSS, etc...
+
+.left-column[
+
+.center[![:scale 30%](input/images/r-logo.svg)]
+
+🔢**R es un lenguaje de programación:**
+
+Escribes código para decirle al  
+computador qué hacer.
+
+]
+.right-column[
+
+.center[![:scale 10%](input/images/stata-logo.png)] .center[![:scale 10%](input/images/spss-logo.svg)]
+
+**👉 SPSS y Stata son principalmente programas de menú:**
+
+Haces clics en botones o menús para ejecutar comandos (aunque Stata también permite escribir algo de código, pero más restringido).
 
 
+]
+
+---
+
+ _**Veamos...**_ 🤓🔎
+
+| Aspecto                       | R                                                              | SPSS / Stata                                                   |
+|--------------------------------|----------------------------------------------------------------|----------------------------------------------------------------|
+| **Forma principal de trabajar**💻   | Escribes código                                                | Usas menús y formularios                                       |
+| **Flexibilidad**🧶                  | Muy alta: puedes crear funciones, automatizar procesos, personalizar todo | Limitada a las opciones que ofrece el programa                 |
+| **Reproducibilidad** 🎬             | Muy alta: guardas todo el código, puedes replicarlo exactamente | Baja si solo usas menús (a menos que guardes sintaxis aparte)   |
+| **Costo**💲                         | Gratis y de código abierto                                     | Licencias pagadas (caras en general)                           |
+| **Extensión**📏                     | Miles de paquetes creados por la comunidad                     | Limitado a lo que la empresa desarrolla                        |
+| **Curva de aprendizaje** 📈         | Más empinada al principio (hay que aprender a codificar)       | Más fácil al principio (solo haces clics)                      |
+
+---
+
+# 👌 Razón ética: reproducibilidad en la ciencia
+
+- La crisis de reproducibilidad mostró que muchos resultados científicos no se pueden replicar porque:
+
+  * No se documentaron bien los análisis.
+
+  * Se hicieron manualmente y no quedaron registros exactos.
+
+- En R, todo lo que haces queda escrito en código: cada paso, cada decisión, cada transformación de datos. **Tenemos la _receta_ de cómo llegar al resultado** 📝➡🍲
+
+---
+
+# 👌 Razón ética: reproducibilidad en la ciencia
+
+- Eso permite:
+
+  ✅ Auditar los análisis (ver cómo se llegó a un resultado).
+
+  ✅ Replicar los análisis con nuevos datos.
+
+  ✅ Corregir errores de manera transparente.
+  
+---
+class: middle, center, inverse
+
+# _1. ¿Qué es R? ¿Qué es RStudio?_
+
+---
+# ¿Qué es R?
+
+Según [r-project.org](https://www.r-project.org/about.html): 
+
+--
+
+&gt; R is a **language** and **environment** for statistical computing and graphics (...) 🤓
+
+--
+
+&gt; R provides a wide **variety of statistical** (linear and nonlinear modelling, classical statistical tests, time-series analysis, classification, clustering, …) and **graphical techniques**, and is highly **extensible** (...) 💻📊
+
+--
+
+&gt; The term “environment” is intended to characterize it as a **fully planned and coherent system**, rather than an incremental accretion of very specific and inflexible tools, as is frequently the case with other data analysis software (...) 🧐
+
+--
+
+&gt; Many users think of R as a statistics system. **We prefer to think of it as an environment within which statistical techniques are implemented**. R can be extended (easily) via packages (...) 💡
+
+---
+class: middle, center, inverse
+
+# Entonces... ¿qué es R?
+
+.large[💡[**Un lenguaje y un ambiente (sistema planificado y coherente) de programación por el cuál se pueden implementar herramientas gráficas y estadísticas.**]()]
+
+---
+# 📌 Principales características de R
+
+**1. Lenguaje especializado en análisis de datos y estadística** 📊
+
+- R fue creado específicamente para análisis estadístico, modelamiento y visualización de datos.
+
+- Tiene muchas funciones estadísticas de base (regresión, pruebas de hipótesis, análisis multivariado, etc.).
+
+| Regresión lineal en ecuación                         | Regresión lineal en R                                 |
+|------------------------------------------|--------------------------------------------------------|
+| `\(\hat{Y} = \beta_0 + \beta_1 X\)`          | `lm(vary ~ varx, data = df)`               |
+
+📝**Nota:** `varx` y `vary` corresponden a columnas del set de datos `df`
+---
+# 📌 Principales características de R
+
+**2. Orientado a objetos** 📍
+
+- En R, todo es un objeto (vectores, tablas, modelos, gráficos, etc.).
+
+- Se trabaja construyendo, modificando y combinando objetos.
+
+- Esto da mayor flexibilidad al trabajo, permitiendo la implementación de soluciones creativas y buenas prácticas.
+
+--
+
+&gt; 🤓 **Nota técnica:** R es un lenguaje orientado a objetos (OOP, _Object-Oriented Programming_). Esto significa que los datos y funciones pueden agruparse en objetos, y estos pueden tener clases, atributos y métodos específicos que definen cómo deben comportarse. Los tres tipos más comunes son: S3, S4 y R6 (ver más [aquí](https://adv-r.hadley.nz/oo.html)).
+
+---
+# 📌 Principales características de R
+
+**3. Lenguaje interpretado**🔢
+
+- A diferencia de otros lenguajes, no es necesario "compilar" el código. **R ejecuta directamente las instrucciones dadas, línea por línea.**
+
+- Esto facilita el trabajo exploratorio y el análisis interactivo.
+
+---
+# 📌 Principales características de R
+
+**4. Extensibilidad mediante paquetes**📦
+
+- Existen más de 20.000 paquetes en [CRAN](https://cran.r-project.org/) (y muchos más en [GitHub](https://github.com/)) que amplían las capacidades de R: desde modelos avanzados hasta visualizaciones interactivas, _Machine Learning_, _web scraping_, etc.
+
+- Es posible crear paquetes propios.
+
+- Ejemplo de paquetes creados en Chile y archivados en CRAN: 
+
+✅ [_calidad_](https://cran.r-project.org/web/packages/calidad/index.html): evaluar la calidad de estimaciones en base a metodología del INE  
+✅[ _chilemapas_](https://cran.r-project.org/web/packages/chilemapas/index.html): mapas terrestres con tipologías simplificadas  
+✅ [_guaguas_:](https://cran.r-project.org/web/packages/guaguas/index.html) datos de nombres inscritos en Chile entre 1920 y 2021
+
+---
+
+.center[![:scale 90%](input/images/tidyverse.png)]
+
+---
+# 📌 Principales características de R
+
+**5. Gráficos y visualizaciones de alta calidad**📊
+
+- R tiene sistemas de visualización muy potentes, como:
+
+✅ Base R graphics
+
+✅ ggplot2 (del ecosistema tidyverse)
+
+✅ librerías para gráficos interactivos como plotly, highcharter, leaflet, etc.
+
+- Además, tiene recursos que facilitan su aprendizaje (ej. [R Graph Gallery](https://r-graph-gallery.com/#))
+
+--
+
+&gt; 🤓 **Nota:** Algunos recursos que serán de utilidad más adelante: [tutorial de ggplot2](https://www.cedricscherer.com/2019/08/05/a-ggplot2-tutorial-for-beautiful-plotting-in-r/) y [Data Visualization: A practical introduction](https://socviz.co/)
+---
+
+## Base R graphics
+
+.pull-left[
+
+```r
+# Gráfico de dispersión en R base
+plot(mtcars$wt, mtcars$mpg,
+     main = "Consumo vs Peso (R base)",
+     xlab = "Peso del auto (wt)",
+     ylab = "Millas por galón (mpg)",
+     pch = 19,         # tipo de punto
+     col = "blue")     # color
+```
+]
+
+.pull-right[
+![](01-r-basics_files/figure-html/unnamed-chunk-2-1.png)&lt;!-- --&gt;
+]
+
+
+---
+
+## Ggplot2
+
+.pull-left[
+
+```r
+# Primero cargar el paquete
+library(ggplot2)
+
+# Gráfico de dispersión con ggplot2
+ggplot(mtcars, aes(x = wt, y = mpg)) +
+  geom_point(color = "darkred", size = 3) +
+  labs(title = "Consumo vs Peso (ggplot2)",
+       x = "Peso del auto (wt)",
+       y = "Millas por galón (mpg)") +
+  theme_minimal()
+```
+]
+
+.pull-right[
+![](01-r-basics_files/figure-html/unnamed-chunk-4-1.png)&lt;!-- --&gt;
+]
+
+---
+
+## Plotly
+
+.pull-left[
+<div class="plotly html-widget html-fill-item" id="htmlwidget-88fc6c58ff2981b02d17" style="width:504px;height:504px;"></div>
+<script type="application/json" data-for="htmlwidget-88fc6c58ff2981b02d17">{"x":{"visdat":{"3d8467a8381c":["function () ","plotlyVisDat"]},"cur_data":"3d8467a8381c","attrs":{"3d8467a8381c":{"x":{},"y":{},"mode":"markers","marker":{"color":"forestgreen","size":10},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"title":"Consumo vs Peso (plotly)","xaxis":{"domain":[0,1],"automargin":true,"title":"Peso del auto (wt)"},"yaxis":{"domain":[0,1],"automargin":true,"title":"Millas por galón (mpg)"},"hovermode":"closest","showlegend":false},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[2.6200000000000001,2.875,2.3199999999999998,3.2149999999999999,3.4399999999999999,3.46,3.5699999999999998,3.1899999999999999,3.1499999999999999,3.4399999999999999,3.4399999999999999,4.0700000000000003,3.73,3.7799999999999998,5.25,5.4240000000000004,5.3449999999999998,2.2000000000000002,1.615,1.835,2.4649999999999999,3.52,3.4350000000000001,3.8399999999999999,3.8450000000000002,1.9350000000000001,2.1400000000000001,1.5129999999999999,3.1699999999999999,2.77,3.5699999999999998,2.7799999999999998],"y":[21,21,22.800000000000001,21.399999999999999,18.699999999999999,18.100000000000001,14.300000000000001,24.399999999999999,22.800000000000001,19.199999999999999,17.800000000000001,16.399999999999999,17.300000000000001,15.199999999999999,10.4,10.4,14.699999999999999,32.399999999999999,30.399999999999999,33.899999999999999,21.5,15.5,15.199999999999999,13.300000000000001,19.199999999999999,27.300000000000001,26,30.399999999999999,15.800000000000001,19.699999999999999,15,21.399999999999999],"mode":"markers","marker":{"color":"forestgreen","size":10,"line":{"color":"rgba(31,119,180,1)"}},"type":"scatter","error_y":{"color":"rgba(31,119,180,1)"},"error_x":{"color":"rgba(31,119,180,1)"},"line":{"color":"rgba(31,119,180,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+]
+
+.pull-right[
+
+```r
+# Cargar plotly
+library(plotly)
+
+# Crear gráfico interactivo
+plot_ly(data = mtcars, x = ~wt, y = ~mpg, type = 'scatter', mode = 'markers',
+        marker = list(color = 'forestgreen', size = 10)) %&gt;%
+  layout(title = "Consumo vs Peso (plotly)",
+         xaxis = list(title = "Peso del auto (wt)"),
+         yaxis = list(title = "Millas por galón (mpg)"))
+```
+]
+
+
+---
+# 📌 Principales características de R
+
+**6. Código abierto y gratuito**👩‍💻
+
+- R es software libre bajo licencia GNU.
+
+- No es necesario pagar licencias ni estar atado a ninguna empresa.
+
+- Esto permite revisar, modificar y compartir el código fuente si asi se desea.
+
+---
+# 📌 Principales características de R
+
+**7. Fuerte comunidad de usuarios**👥👥👤
+
+- Hay una **comunidad activa de usuarios** que crean paquetes, tutoriales, libros, cursos gratuitos y responden dudas en foros.
+
+- Esto **facilita el aprendizaje** y la resolución de problemas.
+
+- Los principales recursos de consulta son:
+
+1. **[Stackoverflow](https://stackoverflow.com/questions):** foro sobre código en general
+2. **[Posit Community](https://forum.posit.co/):** dudas más especificas de R
+3. **[CRAN](https://cran.r-project.org/):** archivo de R, consulta sobre paquetes y documentación
+
+
+.pull-left[![:scale 50%](input/images/stackoverflow-logo.svg)]
+.pull-right[![:scale 50%](input/images/posit-community-logo.png)]
+
+---
+# 📌 Principales características de R
+
+**8. Ideal para ciencia reproducible**🔄
+
+- Como todo se hace escribiendo código, es posible guardar exactamente todos los pasos de nuestro análisis.
+
+- Facilita prácticas de transparencia, replicación y publicación reproducible.
+
+---
+# RStudio
+
+---
+
+class: middle, center, inverse
+
+# _3. Fundamentales de R_
+
+---
+# RScript
+
+- Archivo tipo `.R` que alberga el código necesario para la realización de una tarea o una serie de tareas (ej. procesamiento, análisis o visualización de datos, entre otros)
+
+- Permiten guardar y compartir nuestro trabajo 💾
+
+- Serán nuestra principal herramienta de trabajo 🧐
+
+### ✨**Siempre escribir nuestro código en el script, nunca en la terminal/consola**✨
+
+---
+# RScript
+## Los Scripts como recetas de cocina 👨‍🍳
+
+- Son un **registro** de pasos necesarios para llegar a un plato especifico
+
+- Los pasos deben ser realizados en **orden**: _no podemos cocer verduras si no hemos hervido el agua_
+
+- Plantean el uso de **herramientas** para lograr un plato: _para hervir agua necesitamos una olla o un hervidor_
+
+- Las herramientas tienen **funciones definidas**: _no podemos hervir agua con un tenedor o un microondas (o no sería lo más eficiente)_
+
+---
+# RScript
+## Mayor reproducibilidad y transparencia 🔄
+
+- Así como nosotros usamos nuestra receta de cocina para llegar al plato final, **otros pueden hacer lo mismo**. De la misma manera, nosotros podemos usar otras recetas para hacer otros platos (u otra versión del de nosotros) 📝👩‍🍳
+
+- Y más importante aun, nuestro trabajo está a disposición del ojo crítico de los demás (y viceversa)... **¡dos (o muchas) cabezas piensan mejor que una!**👥
+
+---
+# Working Directory 📁🔨
+
+- La primera vez que abrimos R, este se "posiciona" en una carpeta del computador. Esta será nuestra carpeta de trabajo o... **_Working Directory_**
+
+- El _Working Directory_ se puede revisar con el comando `getwd()`
+
+- Así también, se puede cambiar con `setwd("ruta-a-carpeta-de-trabajo")`
+
+- La carpeta de trabajo debe ser fijada al principio del script
+
+- La idea es que el _Working Dirctory_ incluya todos los insumos necesarios para la realización de la tarea o las tareas que se realizarán en el script (ej. set de datos)
+
+---
+# Rproject
+.left-column[
+![:scale 50%](input/images/rproj.png)
+]
+
+- Es una forma que tiene R para **organizar** la carpeta de trabajo
+
+- Funciona a través de un archivo `.Rproj`, el cual define la **carpeta raíz** 🌱
+
+- La carpeta raíz se entiende como la carpeta general que **alberga el proyecto** (y todos sus insumos y resultados). 
+
+- **Facilita la reproducibilidad**. Podemos compartir nuestro trabajo sin necesidad de modificar el código (cambiar  el directorio de trabajo `setwd()`)
+
+👉**En términos concretos, la carpeta en dónde esté el `.Rproj` será automáticamente el _Working Directory_**
+
+---
+# Rproject
+## Uso de rutas relativas
+
+- Al explicitar una carpeta raíz, no es necesario especificar la ruta completa al archivo. 
+
+- Por ejemplo, si queremos cargar un set de datos `datos.rds` que está en la misma carpeta que el `.Rproj` podemos:
+
+```r
+readRDS("datos.rds")
+```
+
+En vez de...
+
+```r
+readRDS("C:/Users/mvenegasm/Desktop/ayudantia/datos.rds")
+```
+
+📝**Nota:** En este ejemplo, la carpeta `ayudantia` sería: (1) donde se encuentra el `.Rproj` (2) la carpeta raíz y (3) el _Working Directory_.
+
+---
+# Paquetes (_packages_) 📦
+
+- **Conjunto de funciones** para un tipo de tarea 🧐
+
+- Una de las principales potencialidades de R es su capacidad de **extensibilidad**
+
+- La extensibilidad implica que se pueden ampliar las funciones propias de R en base a las necesidades específicas de los usuarios
+
+- Los usuarios pueden crear sus propios paquetes en la medida que lo consideren necesario.
+
+- Existen una serie de paquetes que presentan **alternativas más idóneas** para tareas cotidianas, en comparación a las funcionalidades de R base.
+
+- Los paquetes suelen tener una comunidad detrás que está preocupada de darles soporte, resolver _bugs_ y responder dudas
+
+---
+
+# Paquetes (_packages_) 📦
+
+## Los paquetes como utensilios de cocina 🔪
+
+- Los paquetes se pueden pensar como los utensilios que se utilizan para ejecutar las recetas
+
+- Los utensilios deben ser acordes a lo que solicita la receta
+
+---
+# Paquetes (_packages_) 📦
+
+## Instalación de paquetes 📦🔨
+
+- La instalación de paquetes se debe hacer solamente una vez
+
+- Una vez instalado el paquete, este estará albergado en nuestro computador
+
+- Es necesario actualizar los paquetes de R cada cierto tiempo. Si se actualiza la versión de R, se deben volver a instalar los paquetes.
+
+- La instalación se hace con...
+
+```r
+install.packages("nombre-paquete")
+```
+---
+# Paquetes (_packages_) 📦
+
+## Carga de paquetes 📦⬆
+
+- Instalar un paquete no significa que esté listo para ser usado, para ello se deben "cargar"
+
+- Siguiendo la analogía de la cocina, sería como sacar los utensilios de la alacena para dejarlos en la mesa de cocina 👉🔪👨‍🍳
+
+- Los paquetes se cargan con...
+
+```r
+library(nombre-paquete)
+```
+
+---
+# Paquetes (_packages_) 📦
+## `pacman` (_package manager_)
+
+- Un paquete para manejar paquetes
+
+- Una recomendación para hacer el código más eficiente
+
+- `p_load()` instala y carga los paquetes según sea necesario
+---
+# Paquetes (_packages_) 📦
+## `pacman` (_package manager_)
+
+En vez de...
+
+```r
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("haven")
+library("dplyr")
+library("ggplot2")
+library("haven")
+```
+
+Usar...
+
+```r
+install.packages("pacman")
+pacman::p_load(dplyr, ggplot2, haven)
+```
+
+---
+# Carga de datos
+
+- Leer archivos externos (CSV, Excel, etc.).
+
+```r
+# Base R:
+datos &lt;- read.csv("datos/encuesta.csv")
+
+# tidyverse:
+datos &lt;- readr::read_csv("datos/encuesta.csv")
+```
+
+- También puedes leer SPSS, Stata, Excel, etc. con `haven` o `readxl`.
+
+---
+# Tipos de datos
+
+| Tipo     | Ejemplo                | Descripción |
+|----------|------------------------|-------------|
+| numérico | `2`, `3.14`            | Números reales, con decimales |
+| entero   | `4L`                   | Números enteros (terminan en `L`) |
+| lógico   | `TRUE`, `FALSE`        | Valores booleanos (sí o no) |
+| texto    | `"hola"`              | Cadenas de caracteres |
+| factor   | `factor(c("H", "M"))` | Variables categóricas, usadas comúnmente para factores o niveles |
+
+```r
+typeof("hola")  # character
+is.numeric(3.14)  # TRUE
+```
+
+---
+# Estructuras de datos
+
+| Estructura | Descripción |
+|------------|-------------|
+| vector     | Secuencia lineal de elementos del mismo tipo (numérico, lógico, texto, etc.) |
+| lista      | Colección de objetos heterogéneos; cada elemento puede ser de un tipo distinto |
+| data.frame | Tabla bidimensional; cada columna puede tener un tipo distinto |
+| matriz     | Arreglo bidimensional con elementos del mismo tipo |
+| tibble     | Versión moderna de `data.frame`, con mejor impresión y comportamiento |
+
+```r
+# Ejemplo de vector
+temp &lt;- c(22.5, 23.0, 21.8)
+
+# Ejemplo de lista
+persona &lt;- list(nombre = "Ana", edad = 30, trabaja = TRUE)
+
+# Ejemplo de data.frame
+df &lt;- data.frame(nombre = c("Ana", "Luis"), edad = c(25, 30))
+```
+---
+# Estructuras de datos
+![](https://i0.wp.com/balachandark.com/wp-content/uploads/2022/08/dataStructuresNew.png)
+
+---
+# Operadores
+
+## Aritméticos
+Realizan operaciones matemáticas básicas:
+
+```r
+3 + 2   # Suma
+3 - 2   # Resta
+3 * 2   # Multiplicación
+3 / 2   # División
+3 ^ 2   # Potencia
+```
+---
+# Operadores
+
+## Relacionales
+Comparan valores y devuelven `TRUE` o `FALSE`:
+
+```r
+3 == 3   # Igualdad (TRUE)
+3 != 2   # Diferente (TRUE)
+3 &gt; 2    # Mayor que (TRUE)
+3 &lt;= 2   # Menor o igual (FALSE)
+```
+---
+# Operadores
+
+## Lógicos
+Usan operadores booleanos:
+
+```r
+TRUE &amp; FALSE   # Y lógico (FALSE)
+TRUE | FALSE   # O lógico (TRUE)
+!TRUE          # Negación (FALSE)
+```
+---
+# Operadores
+
+## Asignación
+Asignan valores a objetos:
+
+```r
+x &lt;- 5
+x = 5
+```
+---
+# Operadores
+
+## Pertenencia
+Verifican si un elemento pertenece a un conjunto:
+
+```r
+2 %in% c(1, 2, 3)  # TRUE
+```
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script src="https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/macros.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"countIncrementalSlides": false,
-"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n"
+  "ratio": "16:9",
+  "countIncrementalSlides": false,
+  "slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n"
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
