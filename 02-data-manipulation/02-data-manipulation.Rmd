@@ -1,0 +1,698 @@
+---
+title: "R Básico: comenzando un viaje"
+date: "Abril, 2025"
+author: "" 
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      countIncrementalSlides: false
+      beforeInit: "https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/macros.js"
+      slideNumberFormat: |
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
+          </div>
+        </div>
+    css: ["https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/xaringan-coes.css","https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"]
+    seal: false # esto omite title slide automática  
+---
+layout: true
+class: animated, fadeIn
+
+---
+class: inverse, left, middle
+
+# _Manipulación de datos en R_
+
+
+Martín Venegas Márquez
+
+
+***
+[Doctorado en Psicología UDP - Seminario Metodológico Disciplinario: Metodologías Cuantitativas - Otoño 2025]()
+
+<br>
+
+#### Mayo, 2025
+
+---
+class: inverse, left, middle
+
+# Contenidos de la sesión
+
+--
+
+**0. Recordando...**
+
+--
+
+**1. Manejo básico con R Base**
+
+--
+
+**2. Manejo básico de Tidyverse**
+
+--
+
+**3. Manos a la obra**
+
+---
+
+class: middle, center, inverse
+
+# _0. Recordando..._
+
+
+---
+class: middle, center, inverse
+
+# _1. Manejo básico con R Base_
+
+---
+# Estructuras fundamentales para acceder y manipular datos
+
+--
+
+## Retomemos los datos de ejemplo...
+
+--
+
+```{r}
+datos <- data.frame(
+  persona = c("Juan", "Matias", "Ana", "Leonor", "Sebastian"),
+  edad = c(24, 35, 45, 65, 12)
+)
+```
+
+---
+# Etructuras fundamentales para acceder y manipular datos
+
+--
+
+## `$` (acceso por nombre)
+
+--
+
+- Útil para acceder a una columna por nombre en un `data.frame` o `tibble`.
+
+--
+
+- Requiere que el nombre sea válido (sin espacios, ni símbolos extraños).
+
+--
+
+```{r}
+datos$edad
+```
+
+---
+# Etructuras fundamentales para acceder y manipular datos
+
+--
+
+## `[[]]` (acceso por nombre o posición)
+
+--
+
+- Similar al `$`, pero más flexible (acepta nombres que no son válidos como `datos$"edad promedio"`).
+
+--
+
+- Devuelve el vector completo de esa columna.
+
+```{r}
+datos[["edad"]]
+datos[[2]]  # Segunda columna
+```
+
+---
+# Etructuras fundamentales para acceder y manipular datos
+
+--
+
+## `[,]` (acceso por fila y columna)
+
+--
+
+- Muy poderoso: se usa para seleccionar por posición filas y columnas.
+
+--
+
+- Sintaxis: datos[fila, columna]
+
+--
+
+---
+# Etructuras fundamentales para acceder y manipular datos
+## `[,]` (acceso por fila y columna)
+
+```{r}
+datos[1, ]       # Primera fila
+datos[, 2]       # Segunda columna
+```
+
+---
+# Etructuras fundamentales para acceder y manipular datos
+## `[,]` (acceso por fila y columna)
+
+```{r}
+datos[1:3, 1:2]  # Subconjunto de filas y columnas
+```
+
+---
+
+# Etructuras fundamentales para acceder y manipular datos
+
+--
+
+## `names()` y `colnames()` / `rownames()`
+
+--
+
+- Para obtener o cambiar nombres de columnas o filas.
+
+--
+
+```{r}
+names(datos)
+colnames(datos)[2] <- "edad_en_anios" # Cambiar nombre a columna 2
+datos[["edad_en_anios"]] # Extraer vector de columna renombrada
+```
+
+---
+# Estructuras fundamentales para acceder y manipular datos
+
+--
+
+## Sintesis
+
+| Estructura | Devuelve      | Acceso por      | Útil para                        |
+| ---------- | ------------- | --------------- | -------------------------------- |
+| `$`        | Vector        | Nombre válido   | Acceso rápido a columnas         |
+| `[[]]`     | Vector        | Nombre o índice | Nombres no estándar o por índice |
+| `[ , ]`    | Vector o `df` | Fila y columna  | Subconjuntos más generales       |
+
+
+---
+# Estructuras adicionales útiles de conocer, pero poco utilizadas en la práctica
+
+--
+
+## `attach()` / `detach()` ⚠️NO RECOMENDADO
+
+--
+
+- También permiten acceder directamente a variables de un data.frame, pero pueden generar conflictos y no se recomienda su uso en trabajo reproducible.
+
+---
+# Estructuras adicionales útiles de conocer, pero poco utilizadas en la práctica
+
+--
+
+# `with()` / `within()`
+
+--
+
+- Permiten acceder a variables dentro de un data.frame sin repetir $.
+
+--
+
+- En términos técnicos, evaluan una expresión dentro de un `data.frame`
+
+--
+
+- `with()` solo entrega el output de la expresión
+
+--
+
+- `within()` permite crear columnas dentro del `data.frame`
+
+--
+
+```r
+with(datos, edad)
+```
+---
+# Funciones básicas en R base
+
+--
+## `sort()` — Ordenar vectores
+
+--
+
+- Para ordenar, seleccionar y transformar columnas
+
+--
+
+```{r}
+sort(c(3, 1, 4, 1, 5)) # Ordena vectores de menor a mayor.
+```
+--
+
+- Argumento útil: `decreasing = TRUE` para ordenar de mayor a menor.
+
+--
+
+```{r}
+sort(c(3, 1, 4, 1, 5), decreasing = TRUE)
+```
+
+---
+# Funciones básicas en R base
+
+--
+
+## `order()` — Índices para ordenar
+
+--
+
+```{r}
+x <- c(20, 10, 30)
+order(x)
+```
+
+--
+
+- Devuelve los índices que ordenarían el vector.
+
+--
+
+- Muy útil para ordenar filas de un `data.frame`:
+
+---
+# Funciones básicas en R base
+## `order()` — Índices para ordenar
+
+--
+
+```{r}
+datos # Antes de ordenar
+```
+
+--
+
+```{r}
+datos[order(datos$edad_en_anios), ] # Después de ordenar
+```
+---
+# Funciones básicas en R base
+
+--
+
+## `rank()` — Rango dentro del vector
+
+--
+
+```{r}
+rank(c(100, 50, 200))
+```
+
+--
+
+- Asigna rangos a cada valor.
+
+--
+
+- En caso de empates, asigna promedios.
+
+---
+# Funciones básicas en R base
+
+--
+
+## `unique()` — Valores únicos
+
+--
+
+```{r}
+unique(c(1, 2, 2, 3))
+```
+
+--
+
+- Elimina duplicados.
+
+--
+
+- Muy útil para explorar categorías de una variable.
+
+---
+# Funciones básicas en R base
+
+--
+
+## `table()` — Frecuencia de valores
+
+--
+
+```{r}
+table(c("hombre", "mujer", "mujer"))
+```
+
+--
+
+- Devuelve una tabla de frecuencias absolutas.
+
+--
+
+- Se puede aplicar a columnas de un data.frame.
+
+---
+# Funciones básicas en R base
+
+--
+
+## `which()` — Posiciones de valores lógicos TRUE
+
+--
+
+```{r}
+x <- c(10, 20, 30)
+which(x > 15)
+```
+
+--
+
+- Devuelve los índices donde se cumple una condición.
+
+---
+# Funciones básicas en R base
+
+--
+
+## `subset()` — Filtrar filas
+
+--
+
+```r
+subset(datos, edad > 30)
+```
+
+--
+
+- Atajo para filtrar datos sin usar [].
+
+--
+
+- Más legible que datos[datos$edad > 30, ], pero menos flexible.
+
+---
+# Funciones básicas en R base
+
+--
+
+## `ifelse()` — Evaluación condicional
+
+--
+
+```{r}
+ifelse(datos$edad > 30, "mayor", "menor o igual")
+```
+
+--
+
+- Crea vectores condicionales.
+
+--
+
+- Ideal para recodificaciones simples.
+
+---
+# Funciones básicas en R base
+
+--
+
+### Extra útil: `seq()` y `rep()`
+
+--
+
+```{r}
+seq(1, 10, by = 2)  # Secuencia: 1 3 5 7 9
+rep("hola", 3)      # Repetir: "hola" "hola" "hola"
+```
+
+--
+
+- Construcción de vectores para tests o simulaciones.
+---
+# Funciones básicas en R base
+
+--
+
+| Función    | ¿Qué hace?                    | ¿Dónde se usa?                     |
+| ---------- | ----------------------------- | ---------------------------------- |
+| `sort()`   | Ordena valores                | Listados ordenados                 |
+| `order()`  | Devuelve posiciones ordenadas | Ordenar filas de un `data.frame`   |
+| `rank()`   | Asigna rango                  | Ranking de ingresos, edades, etc.  |
+| `unique()` | Elimina duplicados            | Explorar categorías                |
+| `table()`  | Frecuencia                    | Distribución de respuestas         |
+| `which()`  | Índices que cumplen condición | Subset, localización de casos      |
+| `subset()` | Filtra datos                  | Alternativa a `[]` con condiciones |
+| `ifelse()` | Evaluación condicional        | Recodificación de columnas         |
+| `seq()`    | Secuencias numéricas          | Simulaciones, generación de datos  |
+| `rep()`    | Repetición                    | Construcción de vectores           |
+
+---
+# Estructuras de programación básicas en R
+
+--
+
+## `if` y `else`: decisiones condicionales
+
+--
+
+```{r}
+x <- 10
+
+if (x > 5) {
+  print("Mayor que 5")
+} else {
+  print("Menor o igual a 5")
+}
+```
+--
+
+- `if()` evalúa una condición lógica.
+
+--
+
+- Si es verdadera, ejecuta el código dentro del bloque `{}`.
+
+--
+
+- Si es falsa, se puede usar `else` para ejecutar otra instrucción.
+
+---
+# Estructuras de programación básicas en R
+
+--
+
+## `ifelse()`: condicional vectorizado
+
+--
+
+```{r}
+edades <- c(20, 35, 15)
+
+ifelse(edades >= 18, "adulto", "menor")
+```
+--
+
+- Aplica condiciones sobre vectores completos.
+
+--
+
+- Útil para crear nuevas variables condicionales.
+---
+# Estructuras de programación básicas en R
+
+--
+
+## `for()`: bucles iterativos
+
+--
+
+```{r}
+edades <- c(20, 35, 15) # Creamos vector de edades
+
+for (i in edades) {
+  print(i * 2)
+}
+```
+--
+
+- Ejecuta un bloque de código repetidamente para cada valor.
+
+--
+
+- Útil para operaciones simples o procesos acumulativos.
+
+---
+# Estructuras de programación básicas en R
+
+## `for()`: bucles iterativos
+
+--
+
+¿Y si queremos guardar ese vector?
+
+--
+
+```{r}
+edades <- c(20, 35, 15) # Creamos vector de edades
+dobles <- numeric(length(edades))  # Creamos un vector vacío del mismo largo
+
+for (i in 1:length(edades)) {
+  dobles[i] <- edades[i] * 2
+}
+
+dobles
+```
+
+---
+# Estructuras de programación básicas en R
+
+--
+
+## `while()`: repite mientras se cumpla una condición
+
+--
+
+```{r}
+x <- 1
+
+while (x < 5) {
+  print(x)
+  x <- x + 1
+}
+```
+
+--
+
+- Mientras la condición se mantenga verdadera, ejecuta el código dentro de los `{}`
+
+--
+
+- Menos usado que `for()`, pero útil si no sabes cuántas iteraciones necesitas.
+
+---
+# Estructuras de programación básicas en R
+
+--
+
+## `next` y `break`: control de flujo en bucles
+
+--
+
+```{r}
+for (i in 1:5) {
+  if (i == 3) next   # salta la iteración si i == 3
+  print(i)
+}
+
+for (i in 1:5) {
+  if (i == 3) break  # corta el bucle si i == 3
+  print(i)
+}
+
+```
+
+
+---
+# Estructuras de programación básicas en R
+
+--
+
+## Funciones propias: reutilizar código
+
+--
+
+```{r}
+# Crear función
+multiplicar_por_dos <- function(x) {
+  return(x*2)
+} 
+
+edades <- c(20, 35, 15) # Crear vector de edades
+
+multiplicar_por_dos(edades) # Aplicar función
+
+```
+
+--
+
+- Dentro de `function()` se plantean los parametros
+
+--
+
+- Dentro de `{}` se explicita el comportamiento de la función
+
+---
+# Estructuras de programación básicas en R
+
+--
+
+## Funciones propias: a nuestro criterio
+
+--
+
+```{r}
+multiplicar_por_dos <- function(x) {
+  if(is.numeric(x)){
+    return(x*2)
+  } else {
+    print("¡ERROR! El vector debe ser númerico")
+  }
+
+}
+
+```
+
+--
+
+- Añadamos una condición: para que la función se aplique correctamente, el vector debe ser númerico
+
+--
+
+- Si el vector es númerico, entonces que aplique la función
+
+--
+
+- Si el vector no es númerico, que entregue un mensaje de error
+
+---
+
+# Estructuras de programación básicas en R
+
+--
+
+## Funciones propias: a nuestro criterio
+
+--
+
+```{r}
+edades <- c(20, 35, 15) # Crear vector de edades
+edades_character <- c("20", "35", "15") # Crear vector de edades en character
+```
+
+--
+
+```{r}
+multiplicar_por_dos(edades)
+multiplicar_por_dos(edades_character)
+```
+
+---
+
+# Estructuras de programación básicas en R
+
+| Estructura   | Usos                                     |
+| ------------ | ------------------------------------------------- |
+| `if / else`  | Aplicar lógica binaria (mayores de edad, etc.) |
+| `ifelse()`   | Recodificación vectorial (sexo, regiones, etc.)   |
+| `for`        | Automatizar tareas repetitivas                    |
+| `while`      | Evaluar condiciones dinámicas                     |
+| `next`       | Saltar casos específicos (ej. valores perdidos)   |
+| `break`      | Cortar ejecución si hay un error                  |
+| `function()` | Encapsulación y reutilización del código  |
