@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>R Básico: comenzando un viaje</title>
+    <title>Manipulación de datos en R</title>
     <meta charset="utf-8" />
     <meta name="author" content="" />
-    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.26/header-attrs.js"></script>
     <link rel="stylesheet" href="https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/xaringan-coes.css" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" type="text/css" />
   </head>
@@ -60,6 +60,121 @@ class: middle, center, inverse
 
 # _0. Recordando..._
 
+---
+# Tipos de datos 🔢🔡
+
+| Tipo     | Ejemplo                | Descripción |
+|----------|------------------------|-------------|
+| numeric | `2`, `3.14`            | Números reales, con decimales |
+| integer   | `4L`                   | Números enteros (terminan en `L`) |
+| logical   | `TRUE`, `FALSE`        | Valores booleanos (sí o no, verdadero o falso) |
+| character    | `"hola"`              | Cadenas de caracteres |
+| factor   | `factor(c("H", "M"))` | Variables categóricas, usadas comúnmente para factores o niveles |
+| complex   | `2+3i`, `1-1i`           | Números complejos con partes reales e imaginarias |
+
+---
+# Estructuras de datos 🧱
+
+| Estructura   | Descripción                                                                 | Ejemplo                                  |
+|--------------|------------------------------------------------------------------------------|------------------------------------------|
+| **vector**   | Secuencia de elementos del mismo tipo                                       | `c(1, 2, 3)`                              |
+| **data.frame** | Tabla bidimensional con columnas de distintos tipos                        | `data.frame(nombre = c("Ana", "Luis"), edad = c(25, 30))` |
+| **list**     | Colección de objetos de tipos distintos                                      | `list(nombre = "Ana", edad = 30, notas = c(6, 7, 5))` |
+| **matrix**   | Arreglo bidimensional con elementos del mismo tipo                          | `matrix(1:6, nrow = 2)`                   |
+| **array**    | Arreglo multidimensional (más de 2 dimensiones), todos del mismo tipo        | `array(1:12, dim = c(2, 2, 3))`           |
+
+---
+# Estructuras de datos 🧱
+
+![](https://i0.wp.com/balachandark.com/wp-content/uploads/2022/08/dataStructuresNew.png)
+
+---
+# Operadores 🔣
+
+| Tipo de operador   | Símbolos                         | Uso principal                                   | Ejemplo                                         |
+| ------------------ | -------------------------------- | ----------------------------------------------- | ----------------------------------------------- | 
+| **Aritméticos**    | `+`, `-`, `*`, `/`, `^`          | Realizan operaciones matemáticas básicas        | `3 + 2`, `juan * 2`                             |
+| **Relacionales**   | `==`, `!=`, `&gt;`, `&lt;`, `&gt;=`, `&lt;=` | Comparan valores, retornando `TRUE` o `FALSE`   | `ana != 45`, `juan &lt; matias`                    |
+| **Lógicos**        | `&amp;`, &amp;#124;, `!`                     | Combinan condiciones booleanas (Y, O, Negación) |  `ana &gt; 30 &amp; juan &gt; 30`                         |
+| **De pertenencia** | `%in%`                           | Verifica si un elemento pertenece a un conjunto | `33 %in% c(juan, matias…)`                      |
+
+---
+# Algunos énfasis necesarios...
+
+--
+
+- R es _case sensitive_. Es decir, distingue entre mayúsculas y minúsculas.
+
+--
+
+No es lo mismo
+
+--
+
+```r
+objeto &lt;- 1
+```
+
+--
+
+A
+
+--
+
+```r
+Objeto &lt;- 1
+```
+
+---
+# Algunos énfasis necesarios...
+
+--
+
+- El nombrar objetos en R tiene ciertas reglas:
+
+--
+
+  * Los nombres pueden contener letra y números, pero siempre deben empezar con una letra. Comenzar un objeto con números o caracteres especiales no es válido. Ej. `2objeto`
+  
+--
+
+  * Los espacios y caracteres especiales deben evitarse. Utilizar "_" para separar palabras. Ej. `objeto_uno` en vez de `objeto uno`
+  
+--
+
+  * Evitar utilizar nombres de funciones como nombres de objetos. Ej. `mean`
+  
+---
+# Algunos énfasis necesarios...
+
+--
+
+- Si a un objeto se le pone el mismo nombre que otro que ya tengamos, este se sobrescribe y se pierde el anterior. (Siempre definir nombres distintos)
+
+--
+
+
+```r
+x &lt;- 4
+x
+```
+
+```
+## [1] 4
+```
+
+```r
+x &lt;- 2
+x
+```
+
+```
+## [1] 2
+```
+
+--
+
+`x` fue sobreescrito, pasó de 4 a 2
 
 ---
 class: middle, center, inverse
@@ -469,54 +584,6 @@ which(x &gt; 15)
 
 --
 
-## `subset()` — Filtrar filas
-
---
-
-```r
-subset(datos, edad &gt; 30)
-```
-
---
-
-- Atajo para filtrar datos sin usar [].
-
---
-
-- Más legible que datos[datos$edad &gt; 30, ], pero menos flexible.
-
----
-# Funciones básicas en R base 🔢🔨
-
---
-
-## `ifelse()` — Evaluación condicional
-
---
-
-
-```r
-ifelse(datos$edad &gt; 30, "mayor", "menor o igual")
-```
-
-```
-## [1] "menor o igual" "mayor"         "mayor"         "mayor"        
-## [5] "menor o igual"
-```
-
---
-
-- Crea vectores condicionales.
-
---
-
-- Ideal para recodificaciones simples.
-
----
-# Funciones básicas en R base 🔢🔨
-
---
-
 ### Extra útil: `seq()` y `rep()`
 
 --
@@ -553,8 +620,7 @@ rep("hola", 3)      # Repetir: "hola" "hola" "hola"
 | `rank()`   | Asigna rango                  | Ranking de ingresos, edades, etc.  |
 | `unique()` | Elimina duplicados            | Explorar categorías                |
 | `table()`  | Frecuencia                    | Distribución de respuestas         |
-| `subset()` | Filtra datos                  | Alternativa a `[]` con condiciones |
-| `ifelse()` | Evaluación condicional        | Recodificación de columnas         |
+| `which()`  | Índices que cumplen condición | Subset, localización de casos      |
 | `seq()`    | Secuencias numéricas          | Simulaciones, generación de datos  |
 | `rep()`    | Repetición                    | Construcción de vectores           |
 
@@ -870,23 +936,22 @@ class: middle, center, inverse
 ---
 # Usando dplyr 🔧
 
---
-
 ##  Operador *pipe* `%&gt;%`
 
---
+.left-column[
 
 - La herramienta número uno de `dplyr` (y `tidyverse` en general)
 
---
-
 - El *pipe* (`%&gt;%`) es un **operador** que nos permite **encadenar funciones** de manera más legible y ordenada.
 
---
-
 - Se puede leer como: **"y luego"**. Es decir, el resultado de una operación se pasa como primer argumento a la siguiente.
+]
 
---
+.center[.right-column[
+
+![](input/images/pipe-logo.png)
+
+]]
 
 ---
 # Usando dplyr 🔧
@@ -930,6 +995,8 @@ df %&gt;%
 --
 
 - Fomenta un código más declarativo (lo que quiero hacer, no cómo)
+---
+.center[![](input/images/pipes.png)]
 ---
 # Usando dplyr 🔧
 
@@ -1354,9 +1421,9 @@ datos %&gt;% arrange(desc(ingresos)) # Descendente
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script src="https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/macros.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"countIncrementalSlides": false,
-"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n"
+  "ratio": "16:9",
+  "countIncrementalSlides": false,
+  "slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n"
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
