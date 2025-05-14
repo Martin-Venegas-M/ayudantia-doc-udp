@@ -720,7 +720,7 @@ install.packages("nombre-paquete")
 ---
 # Paquetes (_packages_) 📦
 
-## Carga de paquetes 📦⬆
+## Carga de paquetes 📦⬇
 
 --
 
@@ -838,7 +838,7 @@ datos <- read_dta("encuesta.dta") # Cargar datos
 datos <- readRDS("encuesta.rds") # Cargar datos
 ```
 ---
-# Tipos de datos
+# Tipos de datos 🔢🔡
 
 --
 
@@ -852,7 +852,7 @@ datos <- readRDS("encuesta.rds") # Cargar datos
 
 - Casi cada tipo de dato en R tiene su relación con el nivel de medición de las variables
 ---
-# Tipos de datos
+# Tipos de datos 🔢🔡
 ## `numeric`
 
 - Valores dentro de los números reales. **Incluyen decimales**
@@ -867,7 +867,7 @@ class(horas)
 👀**OJO**: Si bien este tipo de dato está pensado para variables continuas, en la práctica suele usarse también para variables empíricamente discretas (ej. edad).
 
 ---
-# Tipos de datos
+# Tipos de datos 🔢🔡
 ## `integer`
 
 - Valores dentro de los números enteros
@@ -882,7 +882,7 @@ class(folio)
 - Se relacionan con variables discretas, en tanto no admiten números decimales
 
 ---
-# Tipos de datos
+# Tipos de datos 🔢🔡
 ## `logical`
 
 - Valores booleanos/lógicos de verdadero o falso
@@ -895,7 +895,7 @@ class(prueba)
 - No están directamente relacionados a un tipo de nivel de medición, pero si suelen ser los resultados de pruebas o recodificaciones a partir de operadores relacionales
 
 ---
-# Tipos de datos
+# Tipos de datos 🔢🔡
 ## `character`
 
 - Valores de texto
@@ -908,7 +908,7 @@ class(sexo)
 - Se relacionan directamente con el nivel de medición nominal y ordinal
 
 ---
-# Tipos de datos
+# Tipos de datos 🔢🔡s
 ## `factor`
 
 - Valores de texto asociados a un número limitado de categorías (`levels`)
@@ -925,7 +925,7 @@ class(sexo_factor)
 - También se relacionan directamente con el nivel de medición nominal y ordinal
 
 ---
-# Tipos de datos
+# Tipos de datos 🔢🔡
 ## `complex`
 
 - Valores complejos que incluyen números reales e imaginarios
@@ -938,8 +938,8 @@ class(numero_complejo)
 - No están directamente relacionados a un nivel de medición
 
 ---
-# Tipos de datos
-## Transformaciones
+# Tipos de datos 🔢🔡
+## Aplicando transformaciones
 
 Si bien cada tipo de dato tiene su propia clase, es posible transformarlos:
 
@@ -952,7 +952,7 @@ as.factor() # Pasar a factor
 as.complex() # Pasar a número complejo
 ```
 ---
-# Tipos de datos
+# Tipos de datos 🔢🔡
 ## Síntesis
 
 | Tipo     | Ejemplo                | Descripción |
@@ -981,7 +981,7 @@ as.complex() # Pasar a número complejo
 
 ---
 
-# Estructuras de datos: síntesis
+# Estructuras de datos 🧱
 
 | Estructura   | Descripción                                                                 | Ejemplo                                  |
 |--------------|------------------------------------------------------------------------------|------------------------------------------|
@@ -992,7 +992,8 @@ as.complex() # Pasar a número complejo
 | **array**    | Arreglo multidimensional (más de 2 dimensiones), todos del mismo tipo        | `array(1:12, dim = c(2, 2, 3))`           |
 
 ---
-# Estructuras de datos
+# Estructuras de datos 🧱
+
 ![](https://i0.wp.com/balachandark.com/wp-content/uploads/2022/08/dataStructuresNew.png)
 
 ---
@@ -1134,14 +1135,14 @@ ana > 30 & juan > 30 # No, porque no se cumplen ambas condiciones
 ¿La edad de Ana 👩‍🦰 o la edad de Juan 👨‍🦱 es mayor a 30?
 
 ```{r}
-ana > 30 | juan > 30 # Sí, se cumplen ambas condiciones
+ana > 30 | juan > 30 # Sí, se cumple al menos una condición
 ```
 --
 
 ¿La edad de Leonor 🧓 no es 65?
 
 ```{r}
-!(leonor == 65)
+!(leonor == 65) # No, porque si tiene 65 años 
 ```
 
 ---
@@ -1250,16 +1251,60 @@ datos$edad[datos$persona == "Leonor"] - datos$edad[datos$persona == "Matias"]
 
 --
 
+¿La edad de Juan👨‍🦱 es menor a la de Matías 🧔?
 
+```{r}
+datos$edad[datos$persona == "Juan"] < datos$edad[datos$persona == "Matias"] 
+```
 
+---
+# Operadores 🔣
+## En la realidad...
+
+--
+
+¿Y si queremos crear una nueva variable que indique quienes tienen más de 60 años?🤔
+
+--
+
+```{r}
+datos$mayor60 <- datos$edad > 60 # Crear columna
+datos$mayor60 # Ver resultados
+```
+
+💡**Tip**: Puedes ver el set de datos con `View(datos)`
+
+---
+# Operadores 🔣
+## En la realidad...
+
+--
+
+Otras funciones útiles...
+
+--
+
+¿Quién es la persona de más edad? 🧓
+
+```{r}
+datos$persona[which.max(datos$edad)]
+```
+
+--
+
+¿Quién es la persona de menos edad? 🧑
+
+```{r}
+datos$persona[which.min(datos$edad)]
+```
 ---
 
 class: middle, center, inverse
 
-# _Ejercicio_
+# _Ejercicios_
 
 ---
-# Ejercicio
+# Ejercicios
 
 --
 
@@ -1271,11 +1316,11 @@ class: middle, center, inverse
 
 --
 
-2. Instalar y cargar los paquetes `tidyverse`, `haven` y `readxl` a través del paquete `pacman`
+2. Instalar y cargar el paquete `readxl` a través del paquete `pacman`
 
 --
 
-3. Cargar set de datos `encuesta.xlsx` como `encuesta_excel` y cargar set de datos `encuesta.rds` como `encuesta_rds`
+3. Cargar set de datos `encuesta.xlsx` como `encuesta`
 
 --
 
@@ -1283,8 +1328,101 @@ class: middle, center, inverse
 
 --
 
-5. Aplicar operaciones básicas entre las columnas
+**Ahora... apliquemos los operadores a las columnas 😎**
 
+```{r eval = FALSE, include = FALSE}
+# Base de datos hipotética
+encuesta <- data.frame(
+  persona = c("Juan", "Matias", "Ana", "Leonor", "Sebastian"),
+  edad = c(24, 35, 45, 65, 12),
+  ingreso = c(800, 1500, 2000, 1000, 500),
+  estudia = c(TRUE, FALSE, FALSE, FALSE, TRUE)
+)
+
+writexl::write_xlsx(encuesta, "output/encuesta.xlsx")
+```
+
+---
+
+# 5. Aplicando operadores
+## Preguntas con operadores simples
+
+(a) ¿Qué personas tienen ingresos mayores a 1000?
+
+```{r include = FALSE, eval = FALSE}
+encuesta$persona[encuesta$ingreso > 1000]
+```
+
+(b) ¿Quiénes estudian y tienen menos de 30 años?
+
+```{r include = FALSE, eval = FALSE}
+encuesta$persona[encuesta$estudia & encuesta$edad < 30]
+```
+
+(c) ¿Qué edad tiene la persona con mayor ingreso?
+
+```{r include = FALSE, eval = FALSE}
+encuesta$edad[which.max(encuesta$ingreso)]
+```
+
+(d) ¿Alguna persona tiene exactamente 500 de ingreso?
+```{r include = FALSE, eval = FALSE}
+500 %in% encuesta$ingreso
+```
+
+---
+# 5. Aplicando operadores
+## Agregamos una nueva variable
+
+(e) Crear una nueva variable que indique si la persona es mayor de edad:
+
+```{r include = FALSE, eval = FALSE}
+encuesta$mayor_edad <- encuesta$edad >= 18
+```
+
+(f) ¿Qué personas **no estudian** y tienen ingresos **mayores a 1000**?
+
+```{r include = FALSE, eval = FALSE}
+encuesta$persona[!encuesta$estudia & encuesta$ingreso > 1000]
+```
+
+---
+# 5. Aplicando operadores
+## Preguntas más complejas 🧠
+
+(g) ¿Quiénes **estudian** o tienen **menos de 500 de ingreso**?
+
+```{r include = FALSE, eval = FALSE}
+encuesta$persona[encuesta$estudia | encuesta$ingreso < 500]
+```
+
+(h) ¿Qué personas tienen **entre 30 y 60 años** y **no estudian**?
+
+```{r include = FALSE, eval = FALSE}
+encuesta$persona[encuesta$edad >= 30 & encuesta$edad <= 60 & !encuesta$estudia]
+```
+
+(i) ¿La persona con menor ingreso es menor de edad?
+
+```{r include = FALSE, eval = FALSE}
+encuesta$edad[which.min(encuesta$ingreso)] < 18
+```
+
+(j) ¿Qué personas tienen ingresos distintos de 1000 y son mayores de 40 años?
+
+```{r include = FALSE, eval = FALSE}
+encuesta$persona[encuesta$ingreso != 1000 & encuesta$edad > 40]
+```
+
+---
+
+## ¡A practicar!🎉
+
+- Pueden modificar los valores y probar nuevas condiciones.
+
+- Recuerden que puedes combinar operadores para hacer filtros más complejos.
+
+- Pueden usar `View(datos)` o `print(datos)` para observar la base mientras trabajas.
 
 ---
 
