@@ -57,6 +57,11 @@ class: inverse, left, middle
 
 **3. Manos a la obra**
 
+```{r include=FALSE}
+pacman::p_load(tidyverse)
+```
+
+
 ---
 
 class: middle, center, inverse
@@ -70,7 +75,7 @@ class: middle, center, inverse
 # _1. Manejo básico con R Base_
 
 ---
-# Estructuras fundamentales para acceder y manipular datos
+# Estructuras fundamentales de acceso 🧱
 
 --
 
@@ -86,7 +91,7 @@ datos <- data.frame(
 ```
 
 ---
-# Etructuras fundamentales para acceder y manipular datos
+# Estructuras fundamentales de acceso 🧱
 
 --
 
@@ -107,7 +112,7 @@ datos$edad
 ```
 
 ---
-# Etructuras fundamentales para acceder y manipular datos
+# Estructuras fundamentales de acceso 🧱
 
 --
 
@@ -127,7 +132,7 @@ datos[[2]]  # Segunda columna
 ```
 
 ---
-# Etructuras fundamentales para acceder y manipular datos
+# Estructuras fundamentales de acceso 🧱
 
 --
 
@@ -144,7 +149,7 @@ datos[[2]]  # Segunda columna
 --
 
 ---
-# Etructuras fundamentales para acceder y manipular datos
+# Estructuras fundamentales de acceso 🧱
 ## `[,]` (acceso por fila y columna)
 
 ```{r}
@@ -153,7 +158,7 @@ datos[, 2]       # Segunda columna
 ```
 
 ---
-# Etructuras fundamentales para acceder y manipular datos
+# Estructuras fundamentales de acceso 🧱
 ## `[,]` (acceso por fila y columna)
 
 ```{r}
@@ -162,7 +167,7 @@ datos[1:3, 1:2]  # Subconjunto de filas y columnas
 
 ---
 
-# Etructuras fundamentales para acceder y manipular datos
+# Estructuras fundamentales de acceso 🧱
 
 --
 
@@ -181,7 +186,7 @@ datos[["edad_en_anios"]] # Extraer vector de columna renombrada
 ```
 
 ---
-# Estructuras fundamentales para acceder y manipular datos
+# Estructuras fundamentales de acceso 🧱
 
 --
 
@@ -203,38 +208,10 @@ datos[["edad_en_anios"]] # Extraer vector de columna renombrada
 
 --
 
-- También permiten acceder directamente a variables de un data.frame, pero pueden generar conflictos y no se recomienda su uso en trabajo reproducible.
+- Permiten acceder directamente a variables de un data.frame, pero pueden generar conflictos y no se recomienda su uso en trabajo reproducible.
 
 ---
-# Estructuras adicionales útiles de conocer, pero poco utilizadas en la práctica
-
---
-
-# `with()` / `within()`
-
---
-
-- Permiten acceder a variables dentro de un data.frame sin repetir $.
-
---
-
-- En términos técnicos, evaluan una expresión dentro de un `data.frame`
-
---
-
-- `with()` solo entrega el output de la expresión
-
---
-
-- `within()` permite crear columnas dentro del `data.frame`
-
---
-
-```r
-with(datos, edad)
-```
----
-# Funciones básicas en R base
+# Funciones básicas en R base 🔢🔨
 
 --
 ## `sort()` — Ordenar vectores
@@ -259,7 +236,7 @@ sort(c(3, 1, 4, 1, 5), decreasing = TRUE)
 ```
 
 ---
-# Funciones básicas en R base
+# Funciones básicas en R base 🔢🔨
 
 --
 
@@ -281,7 +258,7 @@ order(x)
 - Muy útil para ordenar filas de un `data.frame`:
 
 ---
-# Funciones básicas en R base
+# Funciones básicas en R base 🔢🔨
 ## `order()` — Índices para ordenar
 
 --
@@ -296,11 +273,15 @@ datos # Antes de ordenar
 datos[order(datos$edad_en_anios), ] # Después de ordenar
 ```
 ---
-# Funciones básicas en R base
+# Funciones básicas en R base 🔢🔨
 
 --
 
 ## `rank()` — Rango dentro del vector
+
+--
+
+- Asigna rangos a cada valor.
 
 --
 
@@ -310,14 +291,16 @@ rank(c(100, 50, 200))
 
 --
 
-- Asigna rangos a cada valor.
+- En caso de empates, asigna promedios.
 
 --
 
-- En caso de empates, asigna promedios.
+```{r}
+rank(c(50, 100, 50, 200))
+```
 
 ---
-# Funciones básicas en R base
+# Funciones básicas en R base 🔢🔨
 
 --
 
@@ -338,7 +321,7 @@ unique(c(1, 2, 2, 3))
 - Muy útil para explorar categorías de una variable.
 
 ---
-# Funciones básicas en R base
+# Funciones básicas en R base 🔢🔨
 
 --
 
@@ -359,11 +342,11 @@ table(c("hombre", "mujer", "mujer"))
 - Se puede aplicar a columnas de un data.frame.
 
 ---
-# Funciones básicas en R base
+# Funciones básicas en R base 🔢🔨
 
 --
 
-## `which()` — Posiciones de valores lógicos TRUE
+## `which()` — Posiciones de valores lógicos `TRUE`
 
 --
 
@@ -377,7 +360,7 @@ which(x > 15)
 - Devuelve los índices donde se cumple una condición.
 
 ---
-# Funciones básicas en R base
+# Funciones básicas en R base 🔢🔨
 
 --
 
@@ -398,7 +381,7 @@ subset(datos, edad > 30)
 - Más legible que datos[datos$edad > 30, ], pero menos flexible.
 
 ---
-# Funciones básicas en R base
+# Funciones básicas en R base 🔢🔨
 
 --
 
@@ -419,7 +402,7 @@ ifelse(datos$edad > 30, "mayor", "menor o igual")
 - Ideal para recodificaciones simples.
 
 ---
-# Funciones básicas en R base
+# Funciones básicas en R base 🔢🔨
 
 --
 
@@ -436,7 +419,7 @@ rep("hola", 3)      # Repetir: "hola" "hola" "hola"
 
 - Construcción de vectores para tests o simulaciones.
 ---
-# Funciones básicas en R base
+# Funciones básicas en R base 🔢🔨
 
 --
 
@@ -447,7 +430,6 @@ rep("hola", 3)      # Repetir: "hola" "hola" "hola"
 | `rank()`   | Asigna rango                  | Ranking de ingresos, edades, etc.  |
 | `unique()` | Elimina duplicados            | Explorar categorías                |
 | `table()`  | Frecuencia                    | Distribución de respuestas         |
-| `which()`  | Índices que cumplen condición | Subset, localización de casos      |
 | `subset()` | Filtra datos                  | Alternativa a `[]` con condiciones |
 | `ifelse()` | Evaluación condicional        | Recodificación de columnas         |
 | `seq()`    | Secuencias numéricas          | Simulaciones, generación de datos  |
@@ -604,7 +586,7 @@ for (i in 1:5) {
 
 --
 
-## Funciones propias: reutilizar código
+## Funciones propias: generalizar código
 
 --
 
@@ -696,3 +678,377 @@ multiplicar_por_dos(edades_character)
 | `next`       | Saltar casos específicos (ej. valores perdidos)   |
 | `break`      | Cortar ejecución si hay un error                  |
 | `function()` | Encapsulación y reutilización del código  |
+
+---
+class: middle, center, inverse
+
+# _2. Manejo básico con tidyverse_
+---
+# Usando dplyr 🔧
+
+--
+
+##  Operador *pipe* `%>%`
+
+--
+
+- La herramienta número uno de `dplyr` (y `tidyverse` en general)
+
+--
+
+- El *pipe* (`%>%`) es un **operador** que nos permite **encadenar funciones** de manera más legible y ordenada.
+
+--
+
+- Se puede leer como: **"y luego"**. Es decir, el resultado de una operación se pasa como primer argumento a la siguiente.
+
+--
+
+---
+# Usando dplyr 🔧
+##  Operador *pipe* `%>%`
+
+--
+
+ 📌 Ejemplo sin *pipe*:
+
+```r
+filter(arrange(select(df, var1, var2), var1), var2 > 5)
+```
+
+--
+
+📌 Ejemplo con pipe:
+
+```r
+df %>%
+  select(var1, var2) %>%
+  arrange(var1) %>%
+  filter(var2 > 5)
+```
+
+---
+# Usando dplyr 🔧
+##  Operador *pipe* `%>%`
+
+--
+
+✅ Ventajas:
+
+--
+
+- Más legibilidad y lógica paso a paso
+
+--
+
+- Facilita el _debugging_ (probar parte por parte)
+
+--
+
+- Fomenta un código más declarativo (lo que quiero hacer, no cómo)
+---
+# Usando dplyr 🔧
+
+--
+
+## Retomemos los datos de ejemplo... y adaptemoslos
+
+--
+
+```{r}
+datos <- data.frame(
+  persona = c("Juan", "Matias", "Ana", "Leonor", "Sebastian"),
+  edad = c(24, 35, 45, 65, 12),
+  sexo = c("Hombre", "Hombre", "Mujer", "Mujer", "Hombre"),
+  ingresos = c(1000000, 800000, 1300000, 1500000, 0)
+)
+```
+
+---
+# Usando dplyr 🔧
+
+--
+
+## `select()`
+
+.left-column[
+
+- Permite seleccionar columnas específicas de un dataframe.
+
+- Útil para reducir la base a solo las variables necesarias.
+
+```{r}
+datos %>% select(edad, sexo)
+```
+]
+
+
+.right-column[
+![](input/images/select.png)
+]
+---
+# Usando dplyr 🔧
+
+## `select()`
+
+--
+
+- Existen muchas formas de seleccionar las columnas de un dataframe
+
+--
+
+- Puede ser por nombre de variables, rangos, patrones en el nombre de las variables, etc.
+
+--
+
+- Por ejemplo...
+
+--
+
+```{r}
+datos %>% select(edad:ingresos) # Selección por rangos
+```
+
+---
+# Usando dplyr 🔧
+
+## `select()`
+
+- Existen muchas formas de seleccionar las columnas de un dataframe
+
+- Puede ser por nombre de variables, rangos, exclusiones, etc.
+
+- Por ejemplo...
+
+```{r}
+datos %>% select(-sexo) # Selección por exclusión de sexo
+```
+
+---
+# Usando dplyr 🔧
+
+| Método                    | Ejemplo                                 | Descripción                                                                          |
+| ------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------ |
+| Selección directa         | `select(var1, var2)`                | Selecciona columnas por nombre explícito.                                            |
+| Rango de variables        | `select(var1:var5)`                 | Selecciona todas las columnas desde `var1` hasta `var5`.                             |
+| `starts_with()`           | `select(starts_with("ing"))`        | Selecciona columnas cuyos nombres comienzan con cierto texto.                        |
+| `ends_with()`             | `select(ends_with("_cat"))`         | Selecciona columnas cuyos nombres terminan con cierto texto.                         |
+| `contains()`              | `select(contains("edad"))`          | Selecciona columnas cuyos nombres contienen cierto texto.                            |
+
+---
+# Usando dplyr 🔧
+
+
+| Método                    | Ejemplo                                 | Descripción                                                                          |
+| ------------------------- | --------------------------------------- | ------------------------------------------------------------------------------------ |
+| `matches()`               | `select(matches("^var[0-9]+$"))`    | Selecciona columnas que cumplan con una expresión regular.                           |
+| `all_of()`                | `select(all_of(c("var1", "var2")))` | Selecciona un conjunto de columnas que están en un vector. Da error si falta alguna. |
+| `any_of()`                | `select(any_of(c("var1", "varX")))` | Igual que `all_of()`, pero **ignora** las que no existen.                            |
+| Exclusión (`-`)           | `select(-var1)`                     | Excluye una columna específica.                                                      |
+| Combinación de selectores | `select(starts_with("p"), -p10)`    | Combinación flexible de condiciones.                                                 |
+
+---
+# Usando dplyr 🔧
+
+--
+
+## `rename()`
+
+--
+
+- Renombra columnas de forma directa.
+
+--
+
+- Ideal para mejorar la legibilidad de nombres técnicos.
+
+--
+
+```{r}
+datos %>% rename(edad_respondente = edad)
+```
+
+---
+# Usando dplyr 🔧
+
+--
+
+## `filter()`
+
+--
+
+- Filtra filas según condiciones lógicas.
+
+--
+
+- Para crear subconjuntos de la base.
+
+--
+
+- ¡Aquí serán especialmente útiles los operadores relacionales y lógicos!
+
+```{r}
+datos %>% filter(sexo == "Mujer" & edad > 30)
+```
+---
+# Usando dplyr 🔧
+
+--
+
+## `mutate()`
+
+--
+
+- Crea nuevas columnas o transforma columnas existentes.
+
+--
+
+- Ideal para generar nuevas variables derivadas.
+
+--
+
+```{r}
+datos %>% mutate(edad2 = edad^2)
+```
+
+---
+# Usando dplyr 🔧
+
+--
+
+## `case_when()`
+
+--
+
+- Permite recodificar valores en base a condiciones.
+
+--
+
+- Más legible y potente que `ifelse()` para múltiples condiciones.
+
+--
+
+```{r}
+datos %>% mutate(rango_edad = case_when(
+  edad < 18 ~ "menor de edad",
+  edad >= 18 & edad < 60 ~ "adulto",
+  edad >= 60 ~ "adulto mayor"
+))
+
+```
+
+---
+# Usando dplyr 🔧
+
+--
+
+## `group_by()` + `summarise()`
+
+--
+
+- `group_by()` permite hacer operaciones en base a las categorías de una variable categórica
+
+--
+
+- Su principal utilidad recae en hacer resumenes estadísticos por grupo a través de `summarise()`
+
+```{r}
+datos %>% group_by(sexo) %>% summarise(media_ingresos = mean(ingresos))
+```
+
+---
+## `group_by()`
+![](input/images/group_by.png)
+---
+## `group_by()` + `summarise()`
+.![:scale 50%](input/images/summarise.png)
+
+---
+# Usando dplyr 🔧
+
+--
+
+## `distinct()`
+
+--
+
+- Entrega solo las filas únicas (sin duplicados).
+
+--
+
+- Muy útil para explorar niveles de una variable categórica.
+
+--
+
+```{r}
+datos %>% distinct(sexo)
+```
+
+---
+# Usando dplyr 🔧
+
+--
+
+## `relocate()`
+
+--
+
+- Cambia el orden de las columnas.
+
+--
+
+- Mejora la organización del dataset.
+
+--
+
+```{r}
+datos %>% relocate(edad, .after = sexo)
+```
+---
+
+# Usando dplyr 🔧
+
+--
+
+## `arrange()`
+
+--
+
+- Ordena las filas por una o más variables.
+
+--
+
+- Puedes ordenar ascendente o descendente.
+
+--
+
+```{r}
+datos %>% arrange(edad) # Ascendente (por defecto)
+```
+
+---
+# Usando dplyr 🔧
+
+--
+
+## `arrange()`
+
+--
+
+- Ordena las filas por una o más variables.
+
+--
+
+- Puedes ordenar ascendente o descendente.
+
+--
+
+```{r}
+datos %>% arrange(desc(ingresos)) # Descendente
+```
+
+---
+## Un resumen visual 👀
+
+.center[![](input/images/dplyr.png)]
+---
