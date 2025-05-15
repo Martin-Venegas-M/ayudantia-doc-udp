@@ -37,9 +37,9 @@ Martín Venegas Márquez
 #### Mayo, 2025
 
 ---
-![](../viaje-r/Diapositiva1.png)
+![](input/images/Diapositiva1.PNG)
 ---
-![](../viaje-r/Diapositiva2.png)
+![](input/images/Diapositiva2.PNG)
 ---
 class: inverse, left, middle
 
@@ -1084,7 +1084,7 @@ datos %>% arrange(edad) # Ascendente (por defecto)
 
 --
 
-- Puedes ordenar ascendente o descendente.
+- Es posible ordenar de manera ascendente o descendente.
 
 --
 
@@ -1195,5 +1195,51 @@ class: middle, center, inverse
 ---
 # Ejercicio práctico
 
-1. Cargue el set de datos de la Encuesta Nacional de Salud, Sexualidad y Género 2023
-2. Seleccione las variables de edad, sexo, region, 
+--
+
+(1) Cargue el set de datos de la [Encuesta Nacional de Salud, Sexualidad y Género 2023](https://datos.gob.cl/dataset/encuesta-nacional-de-salud-sexualidad-y-genero-enssex-2022-2023/resource/ed81f50c-1c7d-43d9-9083-dfc161e0cd66)
+
+--
+
+(2) Seleccione las variables de edad (`p4`), sexo (`p1`), región (`region`), calidad de vida (`p8`), percepción de salud (`p10`). Use `select()`.
+
+--
+
+(3) Renombre las variables escogidas por nombres más sustantivos. Use `rename()`.
+
+--
+
+(4) Cree una nueva variable llamada `edad_tramos`, siguiendo los tramos de 18-24, 25-34, 35-44, 45-54, 55-54, +64 años. Use `mutate()` y `case_when()`.
+
+---
+# Ejercicio práctico
+
+(5) Filtre el dataset por los individuos que no se encuentren en el tramo de 18-24 años. Use `filter()`.
+
+--
+
+(6) Genere una tabla con la media de las percepciones de salud a nivel región y guárdela en un nuevo objeto. Use `group_by()`, `summarise()` y `ungroup()`.
+
+--
+
+(7) Haga un join entre el dataset a nivel de personas y la tabla de la media de percepción de salud por región. Utilice `left_join`
+
+--
+
+(8) Ordene las filas del dataset por edad ascendente. Utilice `arrange()`
+
+---
+# Algunos recursos...🤓
+
+### (1) [Página de dplyr](https://dplyr.tidyverse.org/)
+
+### (2) [Cheeatsheet dplyr](https://nyu-cdsc.github.io/learningr/assets/data-transformation.pdf)
+
+### (3) [Tutoriales R coder](https://r-coder.com/select-dplyr-en-r/)
+
+
+---
+
+class: middle, center, inverse
+
+# _¡Muchas gracias!_
