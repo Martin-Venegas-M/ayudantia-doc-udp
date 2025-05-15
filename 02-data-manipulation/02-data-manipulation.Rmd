@@ -1,5 +1,5 @@
 ---
-title: "Manipulación de datos en R"
+title: "Manipulación de datos en R "
 date: "Mayo, 2025"
 author: "" 
 output:
@@ -23,7 +23,7 @@ class: animated, fadeIn
 ---
 class: inverse, left, middle
 
-# _Manipulación de datos en R_
+# _Manipulación de datos en R 🔢🔨🔧_
 
 
 Martín Venegas Márquez
@@ -36,6 +36,10 @@ Martín Venegas Márquez
 
 #### Mayo, 2025
 
+---
+![](../viaje-r/Diapositiva1.png)
+---
+![](../viaje-r/Diapositiva2.png)
 ---
 class: inverse, left, middle
 
@@ -111,7 +115,7 @@ class: middle, center, inverse
 
 --
 
-- R es _case sensitive_. Es decir, distingue entre mayúsculas y minúsculas.
+### R es _case sensitive_. Es decir, distingue entre mayúsculas y minúsculas.
 
 --
 
@@ -138,26 +142,26 @@ Objeto <- 1
 
 --
 
-- El nombrar objetos en R tiene ciertas reglas:
+### El nombrar objetos en R tiene ciertas reglas:
 
 --
 
-  * Los nombres pueden contener letra y números, pero siempre deben empezar con una letra. Comenzar un objeto con números o caracteres especiales no es válido. Ej. `2objeto`
+- Los nombres pueden contener letra y números, pero siempre deben empezar con una letra. Comenzar un objeto con números o caracteres especiales no es válido. Ej. `2objeto`
   
 --
 
-  * Los espacios y caracteres especiales deben evitarse. Utilizar "_" para separar palabras. Ej. `objeto_uno` en vez de `objeto uno`
+- Los espacios y caracteres especiales deben evitarse. Utilizar "_" para separar palabras. Ej. `objeto_uno` en vez de `objeto uno`
   
 --
 
-  * Evitar utilizar nombres de funciones como nombres de objetos. Ej. `mean`
+- Evitar utilizar nombres de funciones como nombres de objetos. Ej. `mean`
   
 ---
 # Algunos énfasis necesarios...
 
 --
 
-- Si a un objeto se le pone el mismo nombre que otro que ya tengamos, este se sobrescribe y se pierde el anterior. (Siempre definir nombres distintos)
+### Si a un objeto se le pone el mismo nombre que otro que ya tengamos, este se sobrescribe y se pierde el anterior. (Siempre definir nombres distintos)
 
 --
 
@@ -171,7 +175,7 @@ x
 
 --
 
-`x` fue sobreescrito, pasó de 4 a 2
+- `x` fue sobreescrito, pasó de 4 a 2
 
 ---
 class: middle, center, inverse
@@ -429,27 +433,6 @@ unique(c(1, 2, 2, 3))
 
 --
 
-## `table()` — Frecuencia de valores
-
---
-
-```{r}
-table(c("hombre", "mujer", "mujer"))
-```
-
---
-
-- Devuelve una tabla de frecuencias absolutas.
-
---
-
-- Se puede aplicar a columnas de un data.frame.
-
----
-# Funciones básicas en R base 🔢🔨
-
---
-
 ## `which()` — Posiciones de valores lógicos `TRUE`
 
 --
@@ -491,7 +474,6 @@ rep("hola", 3)      # Repetir: "hola" "hola" "hola"
 | `order()`  | Devuelve posiciones ordenadas | Ordenar filas de un `data.frame`   |
 | `rank()`   | Asigna rango                  | Ranking de ingresos, edades, etc.  |
 | `unique()` | Elimina duplicados            | Explorar categorías                |
-| `table()`  | Frecuencia                    | Distribución de respuestas         |
 | `which()`  | Índices que cumplen condición | Subset, localización de casos      |
 | `seq()`    | Secuencias numéricas          | Simulaciones, generación de datos  |
 | `rep()`    | Repetición                    | Construcción de vectores           |
@@ -765,6 +747,8 @@ class: middle, center, inverse
 ]]
 
 ---
+.center[![](input/images/pipes.png)]
+---
 # Usando dplyr 🔧
 ##  Operador *pipe* `%>%`
 
@@ -807,8 +791,6 @@ df %>%
 
 - Fomenta un código más declarativo (lo que quiero hacer, no cómo)
 ---
-.center[![](input/images/pipes.png)]
----
 # Usando dplyr 🔧
 
 --
@@ -822,7 +804,8 @@ datos <- data.frame(
   persona = c("Juan", "Matias", "Ana", "Leonor", "Sebastian"),
   edad = c(24, 35, 45, 65, 12),
   sexo = c("Hombre", "Hombre", "Mujer", "Mujer", "Hombre"),
-  ingresos = c(1000000, 800000, 1300000, 1500000, 0)
+  ingresos = c(1000000, 800000, 1300000, 1500000, 0),
+  region = c("Metropolitana", "Metropolitana", "Valparaiso", "Valparaiso", "Antofagasta")
 )
 ```
 
@@ -859,7 +842,7 @@ datos %>% select(edad, sexo)
 
 --
 
-- Puede ser por nombre de variables, rangos, patrones en el nombre de las variables, etc.
+- Puede ser por nombre de variables, rangos, exclusiones, etc.
 
 --
 
@@ -1114,3 +1097,103 @@ datos %>% arrange(desc(ingresos)) # Descendente
 
 .center[![](input/images/dplyr.png)]
 ---
+# Usando dplyr 🔧
+
+--
+
+## Joins 🗝️
+
+- Las bases de datos complejas suelen estar divididas en varias tablas.
+
+--
+
+- Por ejemplo: una tabla de personas y otra de hogares.
+
+--
+
+- Los **joins** nos permiten cruzar estas tablas según una clave común.
+
+--
+
+- Evitamos duplicación y facilitamos el análisis modular de datos.
+
+---
+
+# Usando dplyr 🔧
+
+## Joins 🗝️
+
+
+| Función          | ¿Qué hace?                                                    |
+|------------------|---------------------------------------------------------------|
+| `left_join()`    | Mantiene todas las filas de la tabla base (izquierda).        |
+| `right_join()`   | Mantiene todas las filas de la tabla secundaria (derecha).    |
+| `inner_join()`   | Solo mantiene coincidencias en ambas tablas.                  |
+| `full_join()`    | Une todas las filas de ambas tablas, completa con `NA`.       |
+
+
+Usan una **clave común** (`by = "id"`).
+
+---
+.center[![:scale 65%](input/images/joins.png)]
+---
+
+# Usando dplyr 🔧
+
+- Recordemos nuestros datos
+
+```{r}
+datos
+```
+
+---
+# Usando dplyr 🔧
+
+- Creemos una tabla con información a nivel de región:
+
+```{r}
+regiones <- data.frame(
+  region = c("Arica", "Tarapaca", "Antofagasta", "Atacama", "Coquimbo", "Valparaiso", "Metropolitana", "O'Higgins", "Maule", "Nuble", "Biobio", "Araucania", "Los Rios", "Los Lagos", "Aysen", "Magallanes"),
+  vict = c(31.7, 33.9, 18.7, 11.8, 17.8, 19.4, 27.7, 18.0, 14.2, 14.3, 14.3, 12.6, 22.0, 15.9, 8.7, 3.9)
+)
+regiones
+```
+
+---
+## `left_join()` 🗝️⬅️
+
+```{r}
+left_join(datos, regiones)
+```
+---
+## `right_join()` 🗝️➡️
+
+```{r}
+right_join(datos, regiones)
+```
+---
+
+## `inner_join()` 🗝️🔀
+
+```{r}
+inner_join(datos, regiones)
+```
+
+---
+
+## `full_join()` 🗝️🔄️
+
+```{r}
+full_join(datos, regiones)
+```
+---
+
+class: middle, center, inverse
+
+# _3. Manos a la obra._
+
+---
+# Ejercicio práctico
+
+1. Cargue el set de datos de la Encuesta Nacional de Salud, Sexualidad y Género 2023
+2. Seleccione las variables de edad, sexo, region, 

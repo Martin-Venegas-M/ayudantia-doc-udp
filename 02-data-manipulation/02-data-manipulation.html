@@ -4,7 +4,7 @@
     <title>Manipulación de datos en R</title>
     <meta charset="utf-8" />
     <meta name="author" content="" />
-    <script src="libs/header-attrs-2.26/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
     <link rel="stylesheet" href="https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/xaringan-coes.css" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" type="text/css" />
   </head>
@@ -17,7 +17,7 @@ class: animated, fadeIn
 ---
 class: inverse, left, middle
 
-# _Manipulación de datos en R_
+# _Manipulación de datos en R 🔢🔨🔧_
 
 
 Martín Venegas Márquez
@@ -30,6 +30,10 @@ Martín Venegas Márquez
 
 #### Mayo, 2025
 
+---
+![](../viaje-r/Diapositiva1.png)
+---
+![](../viaje-r/Diapositiva2.png)
 ---
 class: inverse, left, middle
 
@@ -103,7 +107,7 @@ class: middle, center, inverse
 
 --
 
-- R es _case sensitive_. Es decir, distingue entre mayúsculas y minúsculas.
+### R es _case sensitive_. Es decir, distingue entre mayúsculas y minúsculas.
 
 --
 
@@ -130,26 +134,26 @@ Objeto &lt;- 1
 
 --
 
-- El nombrar objetos en R tiene ciertas reglas:
+### El nombrar objetos en R tiene ciertas reglas:
 
 --
 
-  * Los nombres pueden contener letra y números, pero siempre deben empezar con una letra. Comenzar un objeto con números o caracteres especiales no es válido. Ej. `2objeto`
+- Los nombres pueden contener letra y números, pero siempre deben empezar con una letra. Comenzar un objeto con números o caracteres especiales no es válido. Ej. `2objeto`
   
 --
 
-  * Los espacios y caracteres especiales deben evitarse. Utilizar "_" para separar palabras. Ej. `objeto_uno` en vez de `objeto uno`
+- Los espacios y caracteres especiales deben evitarse. Utilizar "_" para separar palabras. Ej. `objeto_uno` en vez de `objeto uno`
   
 --
 
-  * Evitar utilizar nombres de funciones como nombres de objetos. Ej. `mean`
+- Evitar utilizar nombres de funciones como nombres de objetos. Ej. `mean`
   
 ---
 # Algunos énfasis necesarios...
 
 --
 
-- Si a un objeto se le pone el mismo nombre que otro que ya tengamos, este se sobrescribe y se pierde el anterior. (Siempre definir nombres distintos)
+### Si a un objeto se le pone el mismo nombre que otro que ya tengamos, este se sobrescribe y se pierde el anterior. (Siempre definir nombres distintos)
 
 --
 
@@ -174,7 +178,7 @@ x
 
 --
 
-`x` fue sobreescrito, pasó de 4 a 2
+- `x` fue sobreescrito, pasó de 4 a 2
 
 ---
 class: middle, center, inverse
@@ -533,34 +537,6 @@ unique(c(1, 2, 2, 3))
 
 --
 
-## `table()` — Frecuencia de valores
-
---
-
-
-```r
-table(c("hombre", "mujer", "mujer"))
-```
-
-```
-## 
-## hombre  mujer 
-##      1      2
-```
-
---
-
-- Devuelve una tabla de frecuencias absolutas.
-
---
-
-- Se puede aplicar a columnas de un data.frame.
-
----
-# Funciones básicas en R base 🔢🔨
-
---
-
 ## `which()` — Posiciones de valores lógicos `TRUE`
 
 --
@@ -619,7 +595,6 @@ rep("hola", 3)      # Repetir: "hola" "hola" "hola"
 | `order()`  | Devuelve posiciones ordenadas | Ordenar filas de un `data.frame`   |
 | `rank()`   | Asigna rango                  | Ranking de ingresos, edades, etc.  |
 | `unique()` | Elimina duplicados            | Explorar categorías                |
-| `table()`  | Frecuencia                    | Distribución de respuestas         |
 | `which()`  | Índices que cumplen condición | Subset, localización de casos      |
 | `seq()`    | Secuencias numéricas          | Simulaciones, generación de datos  |
 | `rep()`    | Repetición                    | Construcción de vectores           |
@@ -954,6 +929,8 @@ class: middle, center, inverse
 ]]
 
 ---
+.center[![](input/images/pipes.png)]
+---
 # Usando dplyr 🔧
 ##  Operador *pipe* `%&gt;%`
 
@@ -996,8 +973,6 @@ df %&gt;%
 
 - Fomenta un código más declarativo (lo que quiero hacer, no cómo)
 ---
-.center[![](input/images/pipes.png)]
----
 # Usando dplyr 🔧
 
 --
@@ -1012,7 +987,8 @@ datos &lt;- data.frame(
   persona = c("Juan", "Matias", "Ana", "Leonor", "Sebastian"),
   edad = c(24, 35, 45, 65, 12),
   sexo = c("Hombre", "Hombre", "Mujer", "Mujer", "Hombre"),
-  ingresos = c(1000000, 800000, 1300000, 1500000, 0)
+  ingresos = c(1000000, 800000, 1300000, 1500000, 0),
+  region = c("Metropolitana", "Metropolitana", "Valparaiso", "Valparaiso", "Antofagasta")
 )
 ```
 
@@ -1059,7 +1035,7 @@ datos %&gt;% select(edad, sexo)
 
 --
 
-- Puede ser por nombre de variables, rangos, patrones en el nombre de las variables, etc.
+- Puede ser por nombre de variables, rangos, exclusiones, etc.
 
 --
 
@@ -1098,12 +1074,12 @@ datos %&gt;% select(-sexo) # Selección por exclusión de sexo
 ```
 
 ```
-##     persona edad ingresos
-## 1      Juan   24  1000000
-## 2    Matias   35   800000
-## 3       Ana   45  1300000
-## 4    Leonor   65  1500000
-## 5 Sebastian   12        0
+##     persona edad ingresos        region
+## 1      Juan   24  1000000 Metropolitana
+## 2    Matias   35   800000 Metropolitana
+## 3       Ana   45  1300000    Valparaiso
+## 4    Leonor   65  1500000    Valparaiso
+## 5 Sebastian   12        0   Antofagasta
 ```
 
 ---
@@ -1152,12 +1128,12 @@ datos %&gt;% rename(edad_respondente = edad)
 ```
 
 ```
-##     persona edad_respondente   sexo ingresos
-## 1      Juan               24 Hombre  1000000
-## 2    Matias               35 Hombre   800000
-## 3       Ana               45  Mujer  1300000
-## 4    Leonor               65  Mujer  1500000
-## 5 Sebastian               12 Hombre        0
+##     persona edad_respondente   sexo ingresos        region
+## 1      Juan               24 Hombre  1000000 Metropolitana
+## 2    Matias               35 Hombre   800000 Metropolitana
+## 3       Ana               45  Mujer  1300000    Valparaiso
+## 4    Leonor               65  Mujer  1500000    Valparaiso
+## 5 Sebastian               12 Hombre        0   Antofagasta
 ```
 
 ---
@@ -1185,9 +1161,9 @@ datos %&gt;% filter(sexo == "Mujer" &amp; edad &gt; 30)
 ```
 
 ```
-##   persona edad  sexo ingresos
-## 1     Ana   45 Mujer  1300000
-## 2  Leonor   65 Mujer  1500000
+##   persona edad  sexo ingresos     region
+## 1     Ana   45 Mujer  1300000 Valparaiso
+## 2  Leonor   65 Mujer  1500000 Valparaiso
 ```
 ---
 # Usando dplyr 🔧
@@ -1212,12 +1188,12 @@ datos %&gt;% mutate(edad2 = edad^2)
 ```
 
 ```
-##     persona edad   sexo ingresos edad2
-## 1      Juan   24 Hombre  1000000   576
-## 2    Matias   35 Hombre   800000  1225
-## 3       Ana   45  Mujer  1300000  2025
-## 4    Leonor   65  Mujer  1500000  4225
-## 5 Sebastian   12 Hombre        0   144
+##     persona edad   sexo ingresos        region edad2
+## 1      Juan   24 Hombre  1000000 Metropolitana   576
+## 2    Matias   35 Hombre   800000 Metropolitana  1225
+## 3       Ana   45  Mujer  1300000    Valparaiso  2025
+## 4    Leonor   65  Mujer  1500000    Valparaiso  4225
+## 5 Sebastian   12 Hombre        0   Antofagasta   144
 ```
 
 ---
@@ -1247,12 +1223,12 @@ datos %&gt;% mutate(rango_edad = case_when(
 ```
 
 ```
-##     persona edad   sexo ingresos    rango_edad
-## 1      Juan   24 Hombre  1000000        adulto
-## 2    Matias   35 Hombre   800000        adulto
-## 3       Ana   45  Mujer  1300000        adulto
-## 4    Leonor   65  Mujer  1500000  adulto mayor
-## 5 Sebastian   12 Hombre        0 menor de edad
+##     persona edad   sexo ingresos        region    rango_edad
+## 1      Juan   24 Hombre  1000000 Metropolitana        adulto
+## 2    Matias   35 Hombre   800000 Metropolitana        adulto
+## 3       Ana   45  Mujer  1300000    Valparaiso        adulto
+## 4    Leonor   65  Mujer  1500000    Valparaiso  adulto mayor
+## 5 Sebastian   12 Hombre        0   Antofagasta menor de edad
 ```
 
 ---
@@ -1341,12 +1317,12 @@ datos %&gt;% relocate(edad, .after = sexo)
 ```
 
 ```
-##     persona   sexo edad ingresos
-## 1      Juan Hombre   24  1000000
-## 2    Matias Hombre   35   800000
-## 3       Ana  Mujer   45  1300000
-## 4    Leonor  Mujer   65  1500000
-## 5 Sebastian Hombre   12        0
+##     persona   sexo edad ingresos        region
+## 1      Juan Hombre   24  1000000 Metropolitana
+## 2    Matias Hombre   35   800000 Metropolitana
+## 3       Ana  Mujer   45  1300000    Valparaiso
+## 4    Leonor  Mujer   65  1500000    Valparaiso
+## 5 Sebastian Hombre   12        0   Antofagasta
 ```
 ---
 
@@ -1372,12 +1348,12 @@ datos %&gt;% arrange(edad) # Ascendente (por defecto)
 ```
 
 ```
-##     persona edad   sexo ingresos
-## 1 Sebastian   12 Hombre        0
-## 2      Juan   24 Hombre  1000000
-## 3    Matias   35 Hombre   800000
-## 4       Ana   45  Mujer  1300000
-## 5    Leonor   65  Mujer  1500000
+##     persona edad   sexo ingresos        region
+## 1 Sebastian   12 Hombre        0   Antofagasta
+## 2      Juan   24 Hombre  1000000 Metropolitana
+## 3    Matias   35 Hombre   800000 Metropolitana
+## 4       Ana   45  Mujer  1300000    Valparaiso
+## 5    Leonor   65  Mujer  1500000    Valparaiso
 ```
 
 ---
@@ -1403,12 +1379,12 @@ datos %&gt;% arrange(desc(ingresos)) # Descendente
 ```
 
 ```
-##     persona edad   sexo ingresos
-## 1    Leonor   65  Mujer  1500000
-## 2       Ana   45  Mujer  1300000
-## 3      Juan   24 Hombre  1000000
-## 4    Matias   35 Hombre   800000
-## 5 Sebastian   12 Hombre        0
+##     persona edad   sexo ingresos        region
+## 1    Leonor   65  Mujer  1500000    Valparaiso
+## 2       Ana   45  Mujer  1300000    Valparaiso
+## 3      Juan   24 Hombre  1000000 Metropolitana
+## 4    Matias   35 Hombre   800000 Metropolitana
+## 5 Sebastian   12 Hombre        0   Antofagasta
 ```
 
 ---
@@ -1416,14 +1392,227 @@ datos %&gt;% arrange(desc(ingresos)) # Descendente
 
 .center[![](input/images/dplyr.png)]
 ---
+# Usando dplyr 🔧
+
+--
+
+## Joins 🗝️
+
+- Las bases de datos complejas suelen estar divididas en varias tablas.
+
+--
+
+- Por ejemplo: una tabla de personas y otra de hogares.
+
+--
+
+- Los **joins** nos permiten cruzar estas tablas según una clave común.
+
+--
+
+- Evitamos duplicación y facilitamos el análisis modular de datos.
+
+---
+
+# Usando dplyr 🔧
+
+## Joins 🗝️
+
+
+| Función          | ¿Qué hace?                                                    |
+|------------------|---------------------------------------------------------------|
+| `left_join()`    | Mantiene todas las filas de la tabla base (izquierda).        |
+| `right_join()`   | Mantiene todas las filas de la tabla secundaria (derecha).    |
+| `inner_join()`   | Solo mantiene coincidencias en ambas tablas.                  |
+| `full_join()`    | Une todas las filas de ambas tablas, completa con `NA`.       |
+
+
+Usan una **clave común** (`by = "id"`).
+
+---
+.center[![:scale 65%](input/images/joins.png)]
+---
+
+# Usando dplyr 🔧
+
+- Recordemos nuestros datos
+
+
+```r
+datos
+```
+
+```
+##     persona edad   sexo ingresos        region
+## 1      Juan   24 Hombre  1000000 Metropolitana
+## 2    Matias   35 Hombre   800000 Metropolitana
+## 3       Ana   45  Mujer  1300000    Valparaiso
+## 4    Leonor   65  Mujer  1500000    Valparaiso
+## 5 Sebastian   12 Hombre        0   Antofagasta
+```
+
+---
+# Usando dplyr 🔧
+
+- Creemos una tabla con información a nivel de región:
+
+
+```r
+regiones &lt;- data.frame(
+  region = c("Arica", "Tarapaca", "Antofagasta", "Atacama", "Coquimbo", "Valparaiso", "Metropolitana", "O'Higgins", "Maule", "Nuble", "Biobio", "Araucania", "Los Rios", "Los Lagos", "Aysen", "Magallanes"),
+  vict = c(31.7, 33.9, 18.7, 11.8, 17.8, 19.4, 27.7, 18.0, 14.2, 14.3, 14.3, 12.6, 22.0, 15.9, 8.7, 3.9)
+)
+regiones
+```
+
+```
+##           region vict
+## 1          Arica 31.7
+## 2       Tarapaca 33.9
+## 3    Antofagasta 18.7
+## 4        Atacama 11.8
+## 5       Coquimbo 17.8
+## 6     Valparaiso 19.4
+## 7  Metropolitana 27.7
+## 8      O'Higgins 18.0
+## 9          Maule 14.2
+## 10         Nuble 14.3
+## 11        Biobio 14.3
+## 12     Araucania 12.6
+## 13      Los Rios 22.0
+## 14     Los Lagos 15.9
+## 15         Aysen  8.7
+## 16    Magallanes  3.9
+```
+
+---
+## `left_join()` 🗝️⬅️
+
+
+```r
+left_join(datos, regiones)
+```
+
+```
+## Joining with `by = join_by(region)`
+```
+
+```
+##     persona edad   sexo ingresos        region vict
+## 1      Juan   24 Hombre  1000000 Metropolitana 27.7
+## 2    Matias   35 Hombre   800000 Metropolitana 27.7
+## 3       Ana   45  Mujer  1300000    Valparaiso 19.4
+## 4    Leonor   65  Mujer  1500000    Valparaiso 19.4
+## 5 Sebastian   12 Hombre        0   Antofagasta 18.7
+```
+---
+## `right_join()` 🗝️➡️
+
+
+```r
+right_join(datos, regiones)
+```
+
+```
+## Joining with `by = join_by(region)`
+```
+
+```
+##      persona edad   sexo ingresos        region vict
+## 1       Juan   24 Hombre  1000000 Metropolitana 27.7
+## 2     Matias   35 Hombre   800000 Metropolitana 27.7
+## 3        Ana   45  Mujer  1300000    Valparaiso 19.4
+## 4     Leonor   65  Mujer  1500000    Valparaiso 19.4
+## 5  Sebastian   12 Hombre        0   Antofagasta 18.7
+## 6       &lt;NA&gt;   NA   &lt;NA&gt;       NA         Arica 31.7
+## 7       &lt;NA&gt;   NA   &lt;NA&gt;       NA      Tarapaca 33.9
+## 8       &lt;NA&gt;   NA   &lt;NA&gt;       NA       Atacama 11.8
+## 9       &lt;NA&gt;   NA   &lt;NA&gt;       NA      Coquimbo 17.8
+## 10      &lt;NA&gt;   NA   &lt;NA&gt;       NA     O'Higgins 18.0
+## 11      &lt;NA&gt;   NA   &lt;NA&gt;       NA         Maule 14.2
+## 12      &lt;NA&gt;   NA   &lt;NA&gt;       NA         Nuble 14.3
+## 13      &lt;NA&gt;   NA   &lt;NA&gt;       NA        Biobio 14.3
+## 14      &lt;NA&gt;   NA   &lt;NA&gt;       NA     Araucania 12.6
+## 15      &lt;NA&gt;   NA   &lt;NA&gt;       NA      Los Rios 22.0
+## 16      &lt;NA&gt;   NA   &lt;NA&gt;       NA     Los Lagos 15.9
+## 17      &lt;NA&gt;   NA   &lt;NA&gt;       NA         Aysen  8.7
+## 18      &lt;NA&gt;   NA   &lt;NA&gt;       NA    Magallanes  3.9
+```
+---
+
+## `inner_join()` 🗝️🔀
+
+
+```r
+inner_join(datos, regiones)
+```
+
+```
+## Joining with `by = join_by(region)`
+```
+
+```
+##     persona edad   sexo ingresos        region vict
+## 1      Juan   24 Hombre  1000000 Metropolitana 27.7
+## 2    Matias   35 Hombre   800000 Metropolitana 27.7
+## 3       Ana   45  Mujer  1300000    Valparaiso 19.4
+## 4    Leonor   65  Mujer  1500000    Valparaiso 19.4
+## 5 Sebastian   12 Hombre        0   Antofagasta 18.7
+```
+
+---
+
+## `full_join()` 🗝️🔄️
+
+
+```r
+full_join(datos, regiones)
+```
+
+```
+## Joining with `by = join_by(region)`
+```
+
+```
+##      persona edad   sexo ingresos        region vict
+## 1       Juan   24 Hombre  1000000 Metropolitana 27.7
+## 2     Matias   35 Hombre   800000 Metropolitana 27.7
+## 3        Ana   45  Mujer  1300000    Valparaiso 19.4
+## 4     Leonor   65  Mujer  1500000    Valparaiso 19.4
+## 5  Sebastian   12 Hombre        0   Antofagasta 18.7
+## 6       &lt;NA&gt;   NA   &lt;NA&gt;       NA         Arica 31.7
+## 7       &lt;NA&gt;   NA   &lt;NA&gt;       NA      Tarapaca 33.9
+## 8       &lt;NA&gt;   NA   &lt;NA&gt;       NA       Atacama 11.8
+## 9       &lt;NA&gt;   NA   &lt;NA&gt;       NA      Coquimbo 17.8
+## 10      &lt;NA&gt;   NA   &lt;NA&gt;       NA     O'Higgins 18.0
+## 11      &lt;NA&gt;   NA   &lt;NA&gt;       NA         Maule 14.2
+## 12      &lt;NA&gt;   NA   &lt;NA&gt;       NA         Nuble 14.3
+## 13      &lt;NA&gt;   NA   &lt;NA&gt;       NA        Biobio 14.3
+## 14      &lt;NA&gt;   NA   &lt;NA&gt;       NA     Araucania 12.6
+## 15      &lt;NA&gt;   NA   &lt;NA&gt;       NA      Los Rios 22.0
+## 16      &lt;NA&gt;   NA   &lt;NA&gt;       NA     Los Lagos 15.9
+## 17      &lt;NA&gt;   NA   &lt;NA&gt;       NA         Aysen  8.7
+## 18      &lt;NA&gt;   NA   &lt;NA&gt;       NA    Magallanes  3.9
+```
+---
+
+class: middle, center, inverse
+
+# _3. Manos a la obra._
+
+---
+# Ejercicio práctico
+
+1. Cargue el set de datos de la Encuesta Nacional de Salud, Sexualidad y Género 2023
+2. Seleccione las variables de edad, sexo, region, 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script src="https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/macros.js"></script>
 <script>var slideshow = remark.create({
-  "ratio": "16:9",
-  "countIncrementalSlides": false,
-  "slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n"
+"ratio": "16:9",
+"countIncrementalSlides": false,
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n"
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
