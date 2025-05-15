@@ -37,6 +37,8 @@ Martín Venegas Márquez
 #### Mayo, 2025
 
 ---
+![](../viaje-r/Diapositiva1.png)
+---
 class: inverse, left, middle
 
 # Contenidos de la sesión
