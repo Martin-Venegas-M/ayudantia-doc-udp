@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Analizando univariadamente en R</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="" />
+    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
+    <link rel="stylesheet" href="https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/xaringan-coes.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+layout: true
+class: animated, fadeIn
+
+---
+class: inverse, left, middle
+
+# _Analizando univariadamente en R 🧐_
+
+
+Martín Venegas Márquez
+
+
+***
+[Doctorado en Psicología UDP - Seminario Metodológico Disciplinario: Metodologías Cuantitativas - Otoño 2025]()
+
+&lt;br&gt;
+
+#### Mayo, 2025
+
+---
+![](input/images/Diapositiva1.PNG)
+---
+![](input/images/Diapositiva2.PNG)
+---
+![](input/images/Diapositiva3.PNG)
+---
+class: inverse, left, middle
+
+# Contenidos de la sesión
+
+--
+
+**0. Recordando...**
+
+--
+
+**1. Funciones para el análisis univariado**
+
+--
+
+**2. Una intro a la visualización**
+
+--
+
+**3. Manos a la obra**
+
+
+
+---
+
+class: middle, center, inverse
+
+# _0. Recordando..._
+
+---
+# Recordando el flujo de trabajo
+
+(1) Crear una carpeta dónde alojaremos todos los archivos relacionados a nuestro proyecto. Por ejemplo: `enssex`.
+
+(2) A modo de recomendación, crear tres carpetas: `input`, `processing`y `output`. Dentro de `input` crear la carpeta `original` y `proc`.
+
+(3) Alojar el set de datos que utilizaremos para nuestros análisis en la `input/original`.
+
+(4) Abrir RStudio. Dirigir el cursor a la esquina superior derecha y hacer click en _Project: (None)_.
+
+(5) En la ventana emergente, hacer click en _New project..._. Luego, hacer click en _Existing directory_. En la siguiente ventana, hacer click en _Browse_ y escoger la carpeta creada. Finalmente, hacer click en _**Create project**_.
+
+---
+# Recordando el flujo de trabajo
+
+(6) En RStudio, estando en nuestro proyecto, abrir un nuevo script: ir a esquina superior izquierda y _File &gt; New file &gt; RScript_ o `Ctrl + Shift + n`. Guardar haciendo click en el icono de disquete o `Ctrl + s`. Recomendación, guardar en carpeta `processing` con un nombre que haga alusión al procesamiento de datos.
+
+(7) En nuestro script, partir con información de identificación del script: título, nombre de quien lo realiza, fecha, institución, resumen de que hace. Recomendación, separar el código por secciones. Usar `Ctrl + Shift + R`.
+
+(8) Luego, seguir con una sección dónde se instalen los paquetes (si es necesario) y se carguen. Recomendación, utilizar `pacman::p_load()`.
+
+(9) Luego, seguir con una sección dónde se realice el procesamiento de datos necesario.
+
+(10) Por último, terminar con una sección dónde se guarde el dataset procesado. Recomendación, guardar en `input/proc`.
+
+---
+class: middle, center
+
+# Recordemos cómo leer R...
+---
+
+.center[![:scale 80%](input/recordando/Diapositiva1.PNG)]
+
+R, quiero que...
+
+---
+
+.center[![:scale 80%](input/recordando/Diapositiva2.PNG)]
+
+R, quiero que **&lt;span style="color:#c40404"&gt;crees un objeto llamado enssex4_proc&lt;/span&gt;**...
+
+---
+
+.center[![:scale 80%](input/recordando/Diapositiva3.PNG)]
+
+R, quiero que **&lt;span style="color:#c40404"&gt;crees un objeto llamado enssex4_proc&lt;/span&gt;**  **&lt;span style="color:#0772c2"&gt;al cual asignale el siguiente procedimiento:&lt;/span&gt;**...
+
+---
+
+.center[![:scale 80%](input/recordando/Diapositiva4.PNG)]
+
+R, quiero que **&lt;span style="color:#c40404"&gt;crees un objeto llamado enssex4_proc&lt;/span&gt;**  **&lt;span style="color:#0772c2"&gt;al cual asignale el siguiente procedimiento:&lt;/span&gt;** **&lt;span style="color:#54ad7d"&gt; accede al data.frame enssex4&lt;/span&gt;**...
+
+---
+.center[![:scale 80%](input/recordando/Diapositiva5.PNG)]
+
+R, quiero que **&lt;span style="color:#c40404"&gt;crees un objeto llamado enssex4_proc&lt;/span&gt;**  **&lt;span style="color:#0772c2"&gt;al cual asignale el siguiente procedimiento:&lt;/span&gt;** **&lt;span style="color:#54ad7d"&gt;accede al data.frame enssex4&lt;/span&gt;** **&lt;span style="color:#773a6c"&gt;y luego &lt;/span&gt;**...
+
+---
+.center[![:scale 80%](input/recordando/Diapositiva6.PNG)]
+
+R, quiero que **&lt;span style="color:#c40404"&gt;crees un objeto llamado enssex4_proc&lt;/span&gt;**  **&lt;span style="color:#0772c2"&gt;al cual asignale el siguiente procedimiento:&lt;/span&gt;** **&lt;span style="color:#54ad7d"&gt;accede al data.frame enssex4&lt;/span&gt;** **&lt;span style="color:#773a6c"&gt;y luego &lt;/span&gt;** **&lt;span style="color:#f7c626"&gt;selecciona las columnas p1, p4, region, p8 y p10&lt;/span&gt;**...
+---
+.center[![:scale 80%](input/recordando/Diapositiva7.PNG)]
+
+R, quiero que **&lt;span style="color:#c40404"&gt;crees un objeto llamado enssex4_proc&lt;/span&gt;**  **&lt;span style="color:#0772c2"&gt;al cual asignale el siguiente procedimiento:&lt;/span&gt;** **&lt;span style="color:#54ad7d"&gt;accede al data.frame enssex4&lt;/span&gt;** **&lt;span style="color:#773a6c"&gt;y luego &lt;/span&gt;** **&lt;span style="color:#f7c626"&gt;selecciona las columnas p1, p4, region, p8 y p10&lt;/span&gt;** **&lt;span style="color:#773a6c"&gt;y luego &lt;/span&gt;**...
+---
+.center[![:scale 80%](input/recordando/Diapositiva8.PNG)]
+
+R, quiero que **&lt;span style="color:#c40404"&gt;crees un objeto llamado enssex4_proc&lt;/span&gt;**  **&lt;span style="color:#0772c2"&gt;al cual asignale el siguiente procedimiento:&lt;/span&gt;** **&lt;span style="color:#54ad7d"&gt;accede al data.frame enssex4&lt;/span&gt;** **&lt;span style="color:#773a6c"&gt;y luego &lt;/span&gt;** **&lt;span style="color:#f7c626"&gt;selecciona las columnas p1, p4, region, p8 y p10&lt;/span&gt;** **&lt;span style="color:#773a6c"&gt;y luego &lt;/span&gt;** **&lt;span style="color:#ce1cd5"&gt; renombra la columna p1 por sexo y la columna p4 por edad&lt;/span&gt;**.
+
+---
+# Glosario
+
+| Concepto      | Definición                                                                 |
+|---------------|----------------------------------------------------------------------------|
+| Base de datos | Conjunto de tablas de datos interrelacionadas lógicamente.    |
+| Dataset o tabla de datos      | Conjunto de datos, generalmente en forma tabular, usado para análisis.     |
+| data.frame    | Tabla de datos en R; colección de columnas (vectores) del mismo largo.     |
+| Variable      | Concepto más sustantivo. Característica o atributo medido sobre cada unidad de análisis; corresponde a una columna. |
+| Columna       | Vector dentro de un `data.frame`; representa una variable.                |
+| Vector        | Estructura básica que almacena datos del mismo tipo en una dimensión. Puede ser utilizado solo o dentro de un data.frame (columna)   |
+| Fila          | Observación individual en un `data.frame`.                                |
+
+---
+# Glosario
+
+| Concepto      | Definición                                                                 |
+|---------------|----------------------------------------------------------------------------------|
+| Objeto        | Cualquier entidad almacenada en R: puede ser un vector, función, dataframe, etc. |
+| Asignador     | Operador que asigna valores a objetos. En R se usa `&lt;-` o `=`.             |
+| Operador      | Símbolo que realiza una operación. Ej.: `+`, `==`, `%in%`, &amp;#124;, etc.       |
+| Función       | Conjunto de instrucciones que realiza una tarea. Se llama con `()`.        |
+| Paquete       | Colección de funciones, datos y documentación. Ej.: `dplyr`, `ggplot2`.    |
+
+---
+# Funciones esenciales de dplyr
+
+| Función      | Descripción                                                                 |
+|--------------|------------------------------------------------------------------------------|
+| `select()`   | Selecciona columnas del dataframe. Permite elegir variables específicas.     |
+| `rename()`   | Cambia el nombre de una o más columnas.                                      |
+| `filter()`   | Filtra filas según condiciones lógicas.                                      |
+| `case_when()`| Recodifica variables con condiciones múltiples. Alternativa elegante a `ifelse()`. |
+| `mutate()`   | Crea nuevas columnas o modifica columnas existentes.                         |
+| `group_by()` | Agrupa los datos por una o más variables para realizar resúmenes posteriores.|
+| `summarise()`| Resume datos por grupos: medias, conteos, proporciones, etc.                 |
+| `distinct()` | Devuelve solo las filas únicas según una o más columnas.                     |
+| `arrange()`  | Ordena las filas por una o más variables (ascendente o descendente).         |
+---
+class: middle, center, inverse
+
+# _1. Funciones para la visualización_
+
+---
+# ¿Qué es el análisis univariado? 🧐
+
+--
+
+.large[Se refiere al análisis de **una sola variable** a la vez.]
+
+--
+
+.large[Su objetivo es **describir** y resumir el comportamiento o la distribución de esa variable.]
+
+--
+
+.large[Es el **paso inicial** en el análisis de datos y permite armar un panorama de este.]
+
+---
+# ¿Y en el contexto de la investigación?
+
+El análisis univariado cumple un rol fundamental en las primeras etapas de una investigación cuantitativa, ya que permite:
+
+--
+
+- 🧹 **Evaluar la calidad de los datos: ** detectar errores o inconsistencias (ej. valores extremos o codificaciones incorrectas) o revisar supuestos (ej. normalidad).
+
+--
+
+- 🔍 **Caracterizar la muestra: ** entregar una descripción del perfil de los encuestados. P.ej ver la composición sociodemográfica: edad, género, nivel educativo, etc.
+
+--
+
+- 🧭 **Tomar decisiones analíticas informadas:** Se justifica categorizar una variable? ¿Cuál es la mejor forma de agrupar respuestas? ¿Qué medidas de tendencia central y dispersión tienen sentido?
+
+--
+
+- 🗺️** Contextualizar hallazgos posteriores:** ayuda a interpretar resultados más complejos (ej. bi o multivariados) entendiendo primero la distribución simple de cada variable.
+
+---
+# ¿Y qué herramientas tenemos?
+
+--
+
+.large[Las 💫**funciones**💫, pero...]
+
+---
+# ¿Y qué herramientas tenemos?
+
+.large[Las 💫**funciones**💫, pero... hay muchas funciones]
+
+--
+
+.large[Las funciones que utilizaremos dependerán de...]
+
+--
+
+- .large[Los tipos de variables que tengamos]
+
+--
+
+- .large[Lo que queramos hacer]
+
+---
+# Tipos de variables
+
+--
+
+## 🔡Categóricas
+
+--
+
+- **Nominales:** no tienen orden (ej. sexo, país).
+
+--
+
+- **Ordinales:** tienen orden (ej. nivel educacional, satisfacción).
+
+--
+
+## 🔢Cuantitativas
+
+--
+
+- **Discretas:** toman valores enteros (ej. número de hijos).
+
+--
+
+- **Continuas:** pueden tomar cualquier valor en un rango (ej. ingreso, altura).
+
+---
+# ¿Y qué queremos/podemos hacer?
+
+.large[Dependiendo del tipo de variables que tengamos, podemos analizar distrubuciones, frecuencias, medidas de tendencia central, medidas de dispersión y medidas de posición.]
+
+---
+class: middle, center, inverse
+
+# _¡Muchas gracias!_
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/macros.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "16:9",
+"countIncrementalSlides": false,
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// add `data-at-shortcutkeys` attribute to <body> to resolve conflicts with JAWS
+// screen reader (see PR #262)
+(function(d) {
+  let res = {};
+  d.querySelectorAll('.remark-help-content table tr').forEach(tr => {
+    const t = tr.querySelector('td:nth-child(2)').innerText;
+    tr.querySelectorAll('td:first-child .key').forEach(key => {
+      const k = key.innerText;
+      if (/^[a-z]$/.test(k)) res[k] = t;  // must be a single letter (key)
+    });
+  });
+  d.body.setAttribute('data-at-shortcutkeys', JSON.stringify(res));
+})(document);
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
