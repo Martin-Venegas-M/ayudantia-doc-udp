@@ -272,7 +272,389 @@ El análisis univariado cumple un rol fundamental en las primeras etapas de una 
 
 .large[Dependiendo del tipo de variables que tengamos, podemos analizar distrubuciones, frecuencias, medidas de tendencia central, medidas de dispersión y medidas de posición.]
 
+--
+
+.large[Veamos...]
+
 ---
+# Retomemos los datos de ejemplo...
+
+
+```r
+datos &lt;- data.frame(
+  persona = c("Juan", "Matias", "Ana", "Leonor", "Sebastian"),
+  edad = c(24, 35, 45, 65, 12),
+  sexo = c("Hombre", "Hombre", "Mujer", "Mujer", "Hombre"),
+  ingresos = c(1000000, 800000, 1300000, 1500000, 0),
+  region = c("Metropolitana", "Metropolitana", "Valparaiso", "Valparaiso", "Antofagasta")
+)
+```
+
+---
+# Frecuencias
+
+| Función             | Descripción                                     | Tipo de variable     |
+|---------------------|-------------------------------------------------|-----------------------|
+| `table()`           | Crea una tabla de frecuencias absolutas         | Categórica            |
+| `prop.table()`      | Devuelve proporciones a partir de `table()`     | Categórica            |
+| `count()` (dplyr)   | Cuenta frecuencias por categoría                 | Categórica            |
+
+---
+# Frecuencias
+
+--
+
+
+```r
+tabla_region &lt;- table(datos$region)
+tabla_region
+```
+
+```
+## 
+##   Antofagasta Metropolitana    Valparaiso 
+##             1             2             2
+```
+
+--
+
+
+```r
+prop.table(tabla_region)
+```
+
+```
+## 
+##   Antofagasta Metropolitana    Valparaiso 
+##           0.2           0.4           0.4
+```
+---
+# Frecuencias
+## Con dplyr 🔧
+
+--
+
+
+```r
+datos %&gt;% count(region) # Versión simplificada
+```
+
+```
+##          region n
+## 1   Antofagasta 1
+## 2 Metropolitana 2
+## 3    Valparaiso 2
+```
+
+--
+
+
+```r
+datos %&gt;% group_by(region) %&gt;% summarise(n = n()) # Versión larga
+```
+
+```
+## # A tibble: 3 × 2
+##   region            n
+##   &lt;chr&gt;         &lt;int&gt;
+## 1 Antofagasta       1
+## 2 Metropolitana     2
+## 3 Valparaiso        2
+```
+
+---
+# Frecuencias
+## Un buen amigo... `sjmisc`
+
+--
+
+El paquete `sjmisc` es parte de un conjunto de paquetes con herramientas útiles para el trabajo con datos en ciencias sociales (sus hermanos: `sjPlot` y `sjlabelled`).
+
+--
+
+Una función muy útil de este paquete es `frq()`
+
+--
+
+`frq()` nos muestra las frecuencias absolutas, porcentuales _brutas_ y porcentuales válidas.
+
+---
+# Frecuencias
+## Un buen amigo... `sjmisc`
+
+
+```r
+sjmisc::frq(datos$region)
+```
+
+```
+## x &lt;character&gt; 
+## # total N=5 valid N=5 mean=2.20 sd=0.84
+## 
+## Value         | N | Raw % | Valid % | Cum. %
+## --------------------------------------------
+## Antofagasta   | 1 |    20 |      20 |     20
+## Metropolitana | 2 |    40 |      40 |     60
+## Valparaiso    | 2 |    40 |      40 |    100
+## &lt;NA&gt;          | 0 |     0 |    &lt;NA&gt; |   &lt;NA&gt;
+```
+
+---
+# Frecuencias
+## Un buen amigo... `sjmisc`
+
+--
+
+Por ejemplo, si tuvieramos `NA`
+
+--
+
+
+```r
+datos$region[5] &lt;- NA # Asignamos un NA a la fila 5
+```
+
+--
+
+Y luego vemos las frecuencias...
+
+---
+# Frecuencias
+## Un buen amigo... `sjmisc`
+
+
+```r
+sjmisc::frq(datos$region)
+```
+
+```
+## x &lt;character&gt; 
+## # total N=5 valid N=4 mean=1.50 sd=0.58
+## 
+## Value         | N | Raw % | Valid % | Cum. %
+## --------------------------------------------
+## Metropolitana | 2 |    40 |      50 |     50
+## Valparaiso    | 2 |    40 |      50 |    100
+## &lt;NA&gt;          | 1 |    20 |    &lt;NA&gt; |   &lt;NA&gt;
+```
+
+--
+
+**Raw %:** Considera `NA` como una categoría y esta representa el 20%.
+
+**Valid %:** No considera `NA` como categoría, por ende el porcentaje se redistribuye en las otras categorías.
+
+---
+# Frecuencias
+## Un buen amigo... `sjmisc`
+
+--
+
+.large[Una de las principales virtudes de `frq()` es que permite presentar una tabla de frecuencias considerando las 💫**etiquetas**💫, pero...]
+
+--
+
+.large[¿Qué son las etiquetas?]
+
+---
+# 🏷️Etiquetas en R: ¿Qué son y para qué sirven?
+
+--
+
+Las etiquetas (labels) permiten asociar descripciones legibles a variables y a sus valores.
+
+--
+
+Son útiles para:
+
+--
+
+- Mejorar la interpretación de resultados.
+
+--
+
+- Facilitar la presentación de datos (en tablas o gráficos).
+
+--
+
+- Documentar datasets complejos, como encuestas.
+
+---
+# 🏷️Etiquetas en R: ¿Qué son y para qué sirven?
+## El paquete `sjlabelled`
+
+--
+
+Un paquete del ecosistema `sj` diseñado para ver, asignar, modificar y eliminar etiquetas (_labels_) de variables y de sus valores.
+
+
+---
+# Funciones de `sjlabelled`
+
+| Función               | Descripción                                      |
+| --------------------- | ------------------------------------------------ |
+| `get_label()`         | Ver la etiqueta de una variable                  |
+| `set_label()`         | Asignar una etiqueta a una variable              |
+| `get_labels()`        | Ver etiquetas de valores (value labels)          |
+| `set_labels()`        | Asignar etiquetas de valores                     |
+| `remove_labels()`     | Eliminar etiquetas de valores                    |
+| `remove_all_labels()` | Eliminar todas las etiquetas (incluye var label) |
+| `to_factor()`         | Convertir variables etiquetadas a factores       |
+
+---
+# Etiquetas: un ejemplo
+
+Creemos un dataset similar al anterior, pero con una diferencia...
+
+
+```r
+datos2 &lt;- data.frame(
+  persona = c("Juan", "Matias", "Ana", "Leonor", "Sebastian"),
+  edad = c(24, 35, 45, 65, 12),
+  sexo = c(1, 1, 2, 2, 1),
+  ingresos = c(1000000, 800000, 1300000, 1500000, 0),
+  region = c(7, 7, 6, 6, 3)
+)
+```
+
+Las variables de `sexo` y `region` ahora son tipo `numeric`, en vez de `character`.
+
+---
+# Etiqutas: un ejemplo
+
+En estos casos, las etiquetas serán fundamentales para tener información sustantiva de a qué refieren las variables y sus categorías.
+
+Creemos etiquetas para la variable...
+
+
+```r
+datos2 &lt;- datos2 %&gt;% mutate(
+  persona = set_label(persona, "Nombre del informante"),
+  edad = set_label(edad, "Edad del informante"),
+  sexo = set_label(sexo, "Sexo del informante"),
+  ingresos = set_label(ingresos, "Ingresos del informante"),
+  region = set_label(region, "Region de residencia del informante")
+)
+```
+
+---
+# Etiquetas: un ejemplo
+
+Pasamos de un dataset sin etiquetas en las variables...
+
+
+.center[![](input/images/data-sin-labels.png)]
+
+---
+# Etiquetas: un ejemplo
+
+A un dataset con etiquetas en las variables...
+
+.center[![](input/images/data-con-labels.png)]
+
+---
+# Etiquetas: un ejemplo
+
+Asi como podemos etiquetar las variables, también podemos etiquetas los valores/categorías:
+
+
+```r
+datos3 &lt;- datos2 %&gt;% mutate(
+  sexo = set_labels(sexo, labels = c(
+    "Hombre" = 1, "Mujer" = 2)
+    ),
+  region = set_labels(region, labels = c(
+    "Arica" = 1, "Tarapaca" = 2, "Antofagasta" = 3, 
+    "Atacama" = 4, "Coquimbo" = 5, "Valparaiso" = 6, 
+    "Metropolitana" = 7, "O'Higgins" = 8, "Maule" = 9, 
+    "Nuble" = 10, "Biobio" = 11, "Araucania" = 12, 
+    "Los Rios" = 13, "Los Lagos" = 14, "Aysen" = 15, 
+    "Magallanes" = 16)
+    )
+  )
+```
+
+---
+# Etiquetas: un ejemplo
+
+Pasamos de tener un dataset sin etiquetas en las categorías...
+
+
+```r
+frq(datos2$sexo)
+```
+
+```
+## Sexo del informante (x) &lt;numeric&gt; 
+## # total N=5 valid N=5 mean=1.40 sd=0.55
+## 
+## Value | N | Raw % | Valid % | Cum. %
+## ------------------------------------
+##     1 | 3 |    60 |      60 |     60
+##     2 | 2 |    40 |      40 |    100
+##  &lt;NA&gt; | 0 |     0 |    &lt;NA&gt; |   &lt;NA&gt;
+```
+
+---
+# Etiquetas: un ejemplo
+ 
+A uno con etiquetas en las categorías...
+
+
+```r
+frq(datos3$sexo)
+```
+
+```
+## Sexo del informante (x) &lt;numeric&gt; 
+## # total N=5 valid N=5 mean=1.40 sd=0.55
+## 
+## Value |  Label | N | Raw % | Valid % | Cum. %
+## ---------------------------------------------
+##     1 | Hombre | 3 |    60 |      60 |     60
+##     2 |  Mujer | 2 |    40 |      40 |    100
+##  &lt;NA&gt; |   &lt;NA&gt; | 0 |     0 |    &lt;NA&gt; |   &lt;NA&gt;
+```
+---
+
+⚠️**IMPORTANTE:** Al etiquetar categorías que no existen empiricamente, `frq()` las considera como una categoría con frecuencia 0
+
+
+```r
+frq(datos3$region)
+```
+
+```
+## Region de residencia del informante (x) &lt;numeric&gt; 
+## # total N=5 valid N=5 mean=5.80 sd=1.64
+## 
+## Value |         Label | N | Raw % | Valid % | Cum. %
+## ----------------------------------------------------
+##     1 |         Arica | 0 |     0 |       0 |      0
+##     2 |      Tarapaca | 0 |     0 |       0 |      0
+##     3 |   Antofagasta | 1 |    20 |      20 |     20
+##     4 |       Atacama | 0 |     0 |       0 |     20
+##     5 |      Coquimbo | 0 |     0 |       0 |     20
+##     6 |    Valparaiso | 2 |    40 |      40 |     60
+##     7 | Metropolitana | 2 |    40 |      40 |    100
+##     8 |     O'Higgins | 0 |     0 |       0 |    100
+##     9 |         Maule | 0 |     0 |       0 |    100
+##    10 |         Nuble | 0 |     0 |       0 |    100
+##    11 |        Biobio | 0 |     0 |       0 |    100
+##    12 |     Araucania | 0 |     0 |       0 |    100
+##    13 |      Los Rios | 0 |     0 |       0 |    100
+##    14 |     Los Lagos | 0 |     0 |       0 |    100
+##    15 |         Aysen | 0 |     0 |       0 |    100
+##    16 |    Magallanes | 0 |     0 |       0 |    100
+##  &lt;NA&gt; |          &lt;NA&gt; | 0 |     0 |    &lt;NA&gt; |   &lt;NA&gt;
+```
+---
+class: middle, center
+
+# Volvamos...
+
+---
+
 class: middle, center, inverse
 
 # _¡Muchas gracias!_
