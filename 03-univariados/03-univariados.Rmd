@@ -64,7 +64,7 @@ class: inverse, left, middle
 **3. Manos a la obra**
 
 ```{r include=FALSE}
-pacman::p_load(tidyverse, sjmisc, sjlabelled)
+pacman::p_load(tidyverse, sjmisc, sjlabelled, statip, sjPlot)
 ```
 
 ---
@@ -214,11 +214,11 @@ El análisis univariado cumple un rol fundamental en las primeras etapas de una 
 
 --
 
-- 🔍 **Caracterizar la muestra: ** entregar una descripción del perfil de los encuestados. P.ej ver la composición sociodemográfica: edad, género, nivel educativo, etc.
+- 🔍 **Caracterizar la muestra: ** entregar una descripción del perfil de los encuestados. Por ejemplo, ver la composición sociodemográfica: edad, género, nivel educativo, etc.
 
 --
 
-- 🧭 **Tomar decisiones analíticas informadas:** Se justifica categorizar una variable? ¿Cuál es la mejor forma de agrupar respuestas? ¿Qué medidas de tendencia central y dispersión tienen sentido?
+- 🧭 **Tomar decisiones analíticas informadas:** ¿Se justifica categorizar una variable? ¿Cuál es la mejor forma de agrupar respuestas? ¿Qué medidas de tendencia central y dispersión tienen sentido?
 
 --
 
@@ -318,7 +318,7 @@ tabla_region
 
 --
 
-```{r}
+```{r warning=FALSE}
 prop.table(tabla_region)
 ```
 ---
@@ -436,7 +436,6 @@ Son útiles para:
 
 Un paquete del ecosistema `sj` diseñado para ver, asignar, modificar y eliminar etiquetas (_labels_) de variables y de sus valores.
 
-
 ---
 # Funciones de `sjlabelled`
 
@@ -551,7 +550,290 @@ class: middle, center
 # Volvamos...
 
 ---
+# Medidas de tendencia central
 
+| Función                | Descripción                                 | Tipo de variable   |
+|------------------------|---------------------------------------------|---------------------|
+| `mean()`               | Calcula la media                            | Cuantitativa         |
+| `median()`             | Calcula la mediana                          | Cuantitativa         |
+| `statip::mfv()`        | Moda (requiere librería `statip`)          | Cualquiera (según caso) |
+
+---
+# Medidas de tendencia central
+## Media
+
+```{r}
+mean(datos$edad)
+
+```
+
+¿Y si tuvieramos un `NA`?
+
+```{r}
+datos$edad[5] <- NA # Imputemos un NA en la fila 5
+mean(datos$edad) # Nos da resultado NA
+mean(datos$edad, na.rm = T) # Ahora funciona
+```
+---
+# Medidad de tendencia central
+## Media recortada
+
+También podemos recortar la media, esto es especialmente útil cuando hay valores extremos que influyen mucho en el promedio
+
+```{r}
+datos$edad[1] <- -200 # Imputemos -200 años en la fila 1
+datos$edad[5] <- 3000 # Imputemos 3000 años en la fila 5
+mean(datos$edad) # Una media totalmente deformada
+mean(datos$edad, trim = 0.5) # Media recortada, 2.5% de valores superiores e inferiores
+```
+
+---
+# Medidas de tendencia central
+## Mediana
+
+```{r warning=FALSE}
+median(datos2$edad)
+
+datos2$edad[5] <- NA # Tiene el mismo comportamiento con los NA
+median(datos2$edad)
+median(datos2$edad, na.rm = T)
+
+```
+
+---
+# Medias de tendencia central
+## Moda
+
+No existe una función en R Base para la moda. Una opción es utilizar `mfv()` del paquete `statip`.
+
+```{r}
+datos2$edad[5] <- 35 # Repitamos una edad para demostrar la función
+
+statip::mfv(datos2$edad)
+```
+
+Si no hay un valor que se repita, `mfv()` devolverá el vector completo
+
+```{r}
+datos2$edad[5] <- 12 # Devolvamos el valor original
+statip::mfv(datos2$edad)
+```
+
+---
+# Medidas de dispersión
+
+| Función     | Descripción                                  | Tipo de variable   |
+|-------------|----------------------------------------------|---------------------|
+| `sd()`      | Desviación estándar                          | Cuantitativa         |
+| `var()`     | Varianza                                     | Cuantitativa         |
+| `range()`   | Mínimo y máximo                              | Cuantitativa         |
+| `IQR()`     | Rango intercuartílico                        | Cuantitativa         |
+
+---
+# Medidas de dispersión
+
+```{r}
+sd(datos2$edad) # Desviación estándar
+var(datos2$edad) # Varianza
+range(datos2$edad) # Rango
+IQR(datos2$edad) # Rango intercuartilico
+```
+---
+# Medidas de posición
+
+| Función         | Descripción                                          | Tipo de variable   |
+|------------------|------------------------------------------------------|---------------------|
+| `quantile()`     | Percentiles, cuartiles u otros fractiles            | Cuantitativa         |
+
+---
+# Medidas de posición
+## Cuantiles
+```{r}
+quantile(datos2$edad)
+
+set.seed(1) # Fijar semilla para reproducibilidad del aleatorio
+muchas_edades <- sample(18:99, 10000, replace = TRUE) # Vector aleatorio de edades entre 18 y 99 de tamaño 10000
+
+quantile(muchas_edades)
+```
+---
+# Medidas de posición
+## Cuantiles
+
+Con el argumento `probs` podemos explicitar que cuantiles queremos
+
+```{r message=FALSE}
+quantile(muchas_edades, probs = c(0.1, 0.9))
+quantile(muchas_edades, probs = c(0.16, 0.37, 0.92))
+quantile(muchas_edades, probs = c(0.01, 0.02, 0.03, 0.04, 0.05))
+```
+---
+class: middle, center, inverse
+
+# _2. Una intro a la visualización_
+---
+
+# Otro gran amigo... `sjPlot`
+
+--
+
+Es un paquete diseñado para facilitar la visualización de datos y resultados estadísticos, especialmente en el contexto del análisis social y de encuestas.
+
+--
+
+Principales características:
+
+
+--
+
+- Permite una visualización rápida de datos
+
+--
+
+- Enfocado en ciencias sociales y datos de encuesta
+
+--
+
+- Optimizado para ser utilizado junto a otros paquetes útiles para el trabajo con encuestas (ej. `sjlabelled` o `survey`.
+
+--
+
+- En términos técnicos, `sjPlot` es un _wrapper_ de `ggplot2`. Podemos pensarlo como una mascara 🎭
+
+```r
+library(sjPlot)
+```
+
+---
+# La función de oro... 💫`plot_frq()`💫
+
+--
+
+¿Qué es `plot_frq()`?
+
+--
+
+- `plot_frq()` es una función del paquete `sjPlot` que permite crear gráficos univariados de frecuencias o distribución de variables.
+
+--
+
+- Permite visualizar variables categóricas y numéricas.
+
+--
+
+- Usa `ggplot2` por detrás y respeta etiquetas definidas con `sjlabelled`.
+
+---
+
+# `plot_frq()` - Gráficos de barra
+
+--
+
+Por defecto (`type = "bar"`), `plot_frq()` muestra un gráfico de barras para variables categóricas.
+
+--
+
+```r
+library(sjPlot)
+plot_frq(datos$region)
+```
+
+---
+
+# `plot_frq()` - Histogramas
+
+--
+
+Para variables numéricas, se puede usar `type = "histogram"` para ver su distribución.
+
+--
+
+```r
+plot_frq(datos$edad, type = "histogram")
+```
+
+---
+
+# `plot_frq()` - Gráficos de densidad
+
+--
+
+Otra opción para variables numéricas es la curva de densidad (`type = "density"`), que suaviza la distribución.
+
+--
+
+```r
+plot_frq(datos$ingresos, type = "density")
+```
+---
+
+# `plot_frq()` - Gráficos de caja
+
+--
+
+Si quieres ver outliers, dispersión y mediana, puedes usar un boxplot.
+
+--
+
+```r
+plot_frq(datos$ingresos, type = "boxplot")
+```
+---
+# Otras opciones de plot_frq()
+
+- `title = ""`: para cambiar el título del gráfico.
+
+- `show.na = TRUE`: para mostrar los NA.
+
+- `sort.frq = "desc"`: para ordenar de mayor a menor.
+
+También podemos guardar los gráficos, tipo:
+
+```r
+plot <- plot_frq(datos$sexo)
+ggsave("sexo_frecuencia.png", plot)
+```
+
+---
+class: middle, center, inverse
+
+# _3. Manos a la obra_
+
+---
+# Ejercicio
+
+--
+
+(1) Cree un script llamado `analisis_ayudantia3` en la carpeta `processing`.
+
+--
+
+(2) Cargue los paquetes necesarios para el análisis.
+
+--
+
+(3) Cargue los datos procesados en el ejercicio anterior
+
+--
+
+(4) Analice las frecuencias de la variable de `sexo`. Utilice alguna de las funciones vistas el día de hoy: `table()`, `prop_table()`, `count()` o `frq()`.
+
+---
+# Ejercicio
+
+--
+
+(5) Analice las medidas de tendencia central, dispersión y posición de la variable `edad`. Utilice `mean()`, `sd()` y `quantile()`.
+
+--
+
+(6) Cree un gráfico de barrar para la variable `sexo`. Utilice `plot_frq()`.
+
+--
+
+(7) Cree un gráfico de caja para la variable `edad`. Utilice `plot_frq()`.
+
+---
 class: middle, center, inverse
 
 # _¡Muchas gracias!_
