@@ -1,0 +1,81 @@
+---
+title: "Analizando bivariadamente en R"
+date: "Junio, 2025"
+author: "" 
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      ratio: '16:9'
+      countIncrementalSlides: false
+      beforeInit: "https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/macros.js"
+      slideNumberFormat: |
+        <div class="progress-bar-container">
+          <div class="progress-bar" style="width: calc(%current% / %total% * 100%);">
+          </div>
+        </div>
+    css: ["https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/xaringan-coes.css","https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css"]
+    seal: false # esto omite title slide automática  
+---
+layout: true
+class: animated, fadeIn
+
+---
+class: inverse, left, middle
+
+# _Analizando bivariadamente en R 🔎X↔️Y_
+
+
+Martín Venegas Márquez
+
+
+***
+[Doctorado en Psicología UDP - Seminario Metodológico Disciplinario: Metodologías Cuantitativas - Otoño 2025]()
+
+<br>
+
+#### Junio, 2025
+
+---
+![](input/images/Diapositiva1.PNG)
+---
+![](input/images/Diapositiva2.PNG)
+---
+![](input/images/Diapositiva3.PNG)
+---
+![](input/images/Diapositiva4.PNG)
+---
+class: inverse, left, middle
+
+# Contenidos de la sesión
+
+--
+
+**0. Recordando...**
+
+--
+
+**1. Bivariado descriptivo**
+
+--
+
+**2. Una intro a la visualización**
+
+--
+
+**3. Manos a la obra**
+
+```{r include=FALSE}
+pacman::p_load(tidyverse, sjmisc, sjlabelled, statip, sjPlot)
+```
+
+---
+
+class: middle, center, inverse
+
+# _0. Recordando..._
+
+---
+class: middle, center, inverse
+
+# _¡Muchas gracias!_
