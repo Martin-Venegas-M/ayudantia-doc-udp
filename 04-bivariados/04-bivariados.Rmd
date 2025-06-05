@@ -452,6 +452,22 @@ Veamos un ejemplo
 ```{r}
 cor(datos$edad, datos$ingresos)
 ```
+---
+## 🔗 Correlación de Pearson
+### ¿Cómo se interpreta? 🤓
+
+--
+
+Según Cohen...
+
+--
+
+- tamaño de efecto **pequeño**: alrededor de **0.10**
+
+- tamaño de efecto **mediano**: alrededor de **0.30**
+
+- tamaño de efecto **grande**: alrededor de **0.50 y más**
+
 
 ---
 # 3. 📈 Continua + Continua:
@@ -491,6 +507,16 @@ sjPlot::plot_scatter(datos4, edad, ingresos)
 ]
 
 .pull-right[.large[**¿Qué se puede interpretar de acá? 🧐**]]
+
+--
+
+.pull-right[
+
+```{r}
+cor(datos4$edad, datos4$ingresos)
+```
+
+]
 
 ---
 class: middle, center, inverse
@@ -538,8 +564,6 @@ $H_1:$ Los ingresos medios de los hombres son mayores a los de las mujeress
 ---
 # 1. Categórica + Continua 📏
 ## Prueba t 🎉
-
---
 
 .large[También, si los antecedentes o la teoría lo permite, se pueden contrastar hipótesis **direccionales**. Es decir...]
 

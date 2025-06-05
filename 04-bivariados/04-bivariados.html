@@ -4,7 +4,7 @@
     <title>Analizando bivariadamente en R</title>
     <meta charset="utf-8" />
     <meta name="author" content="" />
-    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.26/header-attrs.js"></script>
     <link rel="stylesheet" href="https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/xaringan-coes.css" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" type="text/css" />
   </head>
@@ -631,6 +631,22 @@ cor(datos$edad, datos$ingresos)
 ```
 ## [1] 0.8814577
 ```
+---
+## 🔗 Correlación de Pearson
+### ¿Cómo se interpreta? 🤓
+
+--
+
+Según Cohen...
+
+--
+
+- tamaño de efecto **pequeño**: alrededor de **0.10**
+
+- tamaño de efecto **mediano**: alrededor de **0.30**
+
+- tamaño de efecto **grande**: alrededor de **0.50 y más**
+
 
 ---
 # 3. 📈 Continua + Continua:
@@ -666,6 +682,21 @@ datos4$ingresos &lt;- ifelse(datos4$ingresos &lt; 0, 0, datos4$ingresos)
 ]
 
 .pull-right[.large[**¿Qué se puede interpretar de acá? 🧐**]]
+
+--
+
+.pull-right[
+
+
+```r
+cor(datos4$edad, datos4$ingresos)
+```
+
+```
+## [1] 0.9240157
+```
+
+]
 
 ---
 class: middle, center, inverse
@@ -713,8 +744,6 @@ class: middle, center, inverse
 ---
 # 1. Categórica + Continua 📏
 ## Prueba t 🎉
-
---
 
 .large[También, si los antecedentes o la teoría lo permite, se pueden contrastar hipótesis **direccionales**. Es decir...]
 
@@ -1123,9 +1152,9 @@ class: middle, center, inverse
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script src="https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/macros.js"></script>
 <script>var slideshow = remark.create({
-"ratio": "16:9",
-"countIncrementalSlides": false,
-"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n"
+  "ratio": "16:9",
+  "countIncrementalSlides": false,
+  "slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n"
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
