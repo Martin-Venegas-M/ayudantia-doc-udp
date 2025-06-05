@@ -4,7 +4,7 @@
     <title>Analizando bivariadamente en R</title>
     <meta charset="utf-8" />
     <meta name="author" content="" />
-    <script src="libs/header-attrs-2.26/header-attrs.js"></script>
+    <script src="libs/header-attrs-2.25/header-attrs.js"></script>
     <link rel="stylesheet" href="https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/xaringan-coes.css" type="text/css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" type="text/css" />
   </head>
@@ -72,7 +72,7 @@ class: middle, center, inverse
 ---
 class: middle, center
 
-# Medidas de tendnecia central
+# Medidas de tendencia central
 
 
 ---
@@ -90,6 +90,8 @@ class: middle, center
 
 ---
 
+# Tipos de gráficos con `sjPlot`
+
 | Tipo de gráfico       | Uso principal                                           | Argumentos clave en `plot_frq()`           |
 |-----------------------|---------------------------------------------------------|---------------------------------------------|
 | Gráfico de barras     | Visualizar frecuencias absolutas o relativas de factores| `type = "bar"` (valor por defecto)          |
@@ -103,14 +105,23 @@ class: middle, center
 
 --
 
-- Es el estudio simultáneo de **dos variables** para comprender su relación.
+.large[Es el estudio simultáneo de **dos variables** para comprender su relación]
 
----
+--
 
-- Permite:
-  - Detectar patrones 📈
-  - Formular o contrastar hipótesis 💡
-  - Preparar el camino para modelos más complejos 🗺
+.large[Permite:]
+
+--
+
+.large[(1) Detectar patrones 📈]
+
+--
+
+.large[(2) Formular o contrastar hipótesis 💡]
+
+--
+
+.large[(3) Preparar el camino para modelos más complejos 🚀]
 
 ---
 
@@ -118,14 +129,16 @@ class: middle, center
 
 --
 
-- Las relaciones entre variables son el corazón de las preguntas sociales:
+.large[Las relaciones entre variables son el corazón de las preguntas en la investigación social:]
+
   - ¿Afecta el nivel educativo la participación política?
   - ¿Hay desigualdad de ingresos según género?
   - ¿Existe una relación entre edad y actitudes hacia políticas públicas?
 
 --
 
-- El análisis bivariado nos ayuda a:
+.large[El análisis bivariado nos ayuda a:]
+
   - Identificar **asociaciones relevantes**.
   - Evaluar **desigualdades** y **brechas**.
   - Formular **modelos explicativos**.
@@ -136,15 +149,15 @@ class: middle, center
 
 --
 
-- 🧱 Categórica + Categórica: Asociación
+.large[📏 ** Categórica + Continua:** Comparación de estadísticos por cada categoría]
 
 --
 
-- 📏 Categórica + Continua: Comparación de medias
+.large[🧱 **Categórica + Categórica:** Distribución conjunta de frecuencias]
 
 --
 
-- 📈 Continua + Continua: Correlación
+.large[**📈 Continua + Continua:** Covarianzas y correlaciones]
 
 ---
 
@@ -154,85 +167,952 @@ class: middle, center, inverse
 
 ---
 
-## 1. Dos variables categóricas 🧱
+# Retomemos los datos de ejemplo...
 
-- `table()`, `count()`, `janitor::tabyl()`
-- Proporciones:
-  - conjuntas
-  - marginales
-  - condicionales
-- Gráficos:
-  - Barras apiladas (`position = "stack"`)
-  - Barras lado a lado (`position = "dodge"`)
+
+```r
+datos &lt;- data.frame(
+  persona = c("Juan", "Matias", "Ana", "Leonor", "Sebastian"),
+  edad = c(24, 35, 45, 65, 12),
+  sexo = c("Hombre", "Hombre", "Mujer", "Mujer", "Hombre"),
+  ingresos = c(1000000, 800000, 1300000, 1500000, 0),
+  region = c("Metropolitana", "Metropolitana", "Valparaiso", "Valparaiso", "Antofagasta")
+)
+```
+---
+
+# 1. Categórica + Continua 📏
+
+--
+
+Implica analizar los estadísticos de interés (media, mediana, desviación estándar, etc) de una variable cuantitativa en base a las categorías de una variable categórica
+
+--
+
+Por ejemplo:
+
+--
+
+
+```r
+datos %&gt;% group_by(sexo) %&gt;% summarise(media = mean(edad))
+```
+
+```
+## # A tibble: 2 × 2
+##   sexo   media
+##   &lt;chr&gt;  &lt;dbl&gt;
+## 1 Hombre  23.7
+## 2 Mujer   55
+```
 
 ---
 
-## 2. Categórica + Continua 📏
+# 1. Categórica + Continua 📏
 
-- Promedios por grupo:  
-  `datos %&gt;% group_by(grupo) %&gt;% summarise(media = mean(variable))`
+--
 
-- Visualizaciones:
-  - `ggplot2::geom_boxplot()`
-  - `ggplot2::geom_violin()` (opcional)
+Con `dplyr` podemos crear una columna por cada estadístico de interés:
+
+--
+
+
+```r
+datos %&gt;% 
+  group_by(sexo) %&gt;% 
+  summarise(
+    n = n(),
+    min = min(edad),
+    max = max(edad),
+    media = mean(edad),
+    mediana = median(edad),
+    DE = sd(edad)
+    )
+```
+
+```
+## # A tibble: 2 × 7
+##   sexo       n   min   max media mediana    DE
+##   &lt;chr&gt;  &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;
+## 1 Hombre     3    12    35  23.7      24  11.5
+## 2 Mujer      2    45    65  55        55  14.1
+```
+
+---
+# 1. Categórica + Continua 📏
+
+--
+
+Una visualización común:
+
+--
+
+Boxplots por grupo...
+
+--
+
+```r
+# Generemos datos aleatorios para la visualización
+
+set.seed(1) 
+
+datos2 &lt;- data.frame(
+  edad = sample(18:98, 10000, replace = T),
+  sexo = sample(c("Hombre", "Mujer"), 10000, replace = T)
+)
+
+# Generar boxplot
+sjPlot::plot_grpfrq(datos2$edad, datos2$sexo, type = "boxplot")
+```
+
+---
+# 1. Categórica + Continua 📏
+
+![](04-bivariados_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+---
+# 2. Categórica + Categórica 🧱
+
+--
+
+Se analiza la distribución conjunta de dos variables categóricas. Esto implica ver las frecuencias (porcentuales y absolutas) por cada combinación de categorías.
+
+--
+
+**La presentación más común:** tablas de contingencia/tablas de doble entrada
+
+--
+
+.center[![](input/images/tab2.png)]
+---
+
+# 2. Categórica + Categórica 🧱
+
+## Un amigo... `janitor::tabyl()`
+
+
+```r
+
+# Cargar paquete
+library(janitor)
+
+# Crear datos aleatorios
+set.seed(1)
+
+datos3 &lt;- data.frame(
+  educ = sample(c("Sin educación formal", "Primaria completa", "Secundaria incompleta", "Terciaria y postitulo"), 10000, replace = T),
+  sexo = sample(c("Hombre", "Mujer"), 10000, replace = T)
+)
+
+# Generar tabla
+datos3 %&gt;% 
+  tabyl(sexo, educ) %&gt;% %&gt;% # Función que hace la pega!
+  adorn_percentages("row") %&gt;% # Calcular porcentajes por fila
+  adorn_pct_formatting(digits = 2) %&gt;% # Formatear porcentajes
+  adorn_ns() # Agregar n's
+```
+
+---
+# 2. Categórica + Categórica 🧱
+## Un amigo... `janitor::tabyl()`
+
+--
+
+Veamos los porcentajes por **fila**...
+
+--
+
+
+```
+##    sexo Primaria completa Secundaria incompleta Sin educación formal
+##  Hombre    25.06% (1,283)        24.18% (1,238)       25.78% (1,320)
+##   Mujer    24.86% (1,213)        24.73% (1,207)       24.98% (1,219)
+##  Terciaria y postitulo
+##         24.98% (1,279)
+##         25.43% (1,241)
+```
+
+--
+
+Y los porcentajes por **columnas**
+
+--
+
+
+```
+##    sexo Primaria completa Secundaria incompleta Sin educación formal
+##  Hombre    51.40% (1,283)        50.63% (1,238)       51.99% (1,320)
+##   Mujer    48.60% (1,213)        49.37% (1,207)       48.01% (1,219)
+##  Terciaria y postitulo
+##         50.75% (1,279)
+##         49.25% (1,241)
+```
+
+---
+## Otro amigo... `sjPlot::sjt.xtab()`
+
+
+```r
+sjPlot::sjt.xtab(datos3$sexo, datos3$educ) # Solo n
+```
+
+&lt;table style="border-collapse:collapse; border:none;"&gt;
+ &lt;tr&gt;
+ &lt;th style="border-top:double; text-align:center; font-style:italic; font-weight:normal; border-bottom:1px solid;" rowspan="2"&gt;sexo&lt;/th&gt;
+ &lt;th style="border-top:double; text-align:center; font-style:italic; font-weight:normal;" colspan="4"&gt;educ&lt;/th&gt;
+ &lt;th style="border-top:double; text-align:center; font-style:italic; font-weight:normal; font-weight:bolder; font-style:italic; border-bottom:1px solid; " rowspan="2"&gt;Total&lt;/th&gt;
+ &lt;/tr&gt;
+ 
+&lt;tr&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Primaria completa&lt;/td&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Secundaria&lt;br&gt;incompleta&lt;/td&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Sin educación formal&lt;/td&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Terciaria y&lt;br&gt;postitulo&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+&lt;tr&gt; 
+&lt;td style="padding:0.2cm;  text-align:left; vertical-align:middle;"&gt;Hombre&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1283&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1238&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1320&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1279&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;  "&gt;&lt;span style="color:black;"&gt;5120&lt;/span&gt;&lt;/td&gt; 
+&lt;/tr&gt;
+ 
+&lt;tr&gt; 
+&lt;td style="padding:0.2cm;  text-align:left; vertical-align:middle;"&gt;Mujer&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1213&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1207&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1219&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1241&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;  "&gt;&lt;span style="color:black;"&gt;4880&lt;/span&gt;&lt;/td&gt; 
+&lt;/tr&gt;
+ 
+&lt;tr&gt; 
+&lt;td style="padding:0.2cm;  border-bottom:double; font-weight:bolder; font-style:italic; text-align:left; vertical-align:middle;"&gt;Total&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2496&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2445&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2539&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2520&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;10000&lt;/span&gt;&lt;/td&gt; 
+&lt;/tr&gt;
+&lt;td style="text-align:right; font-size:0.9em; font-style:italic; padding:0.2cm;" colspan="6"&gt;&amp;chi;&lt;sup&gt;2&lt;/sup&gt;=1.188 &amp;middot; df=3 &amp;middot; Cramer's V=0.011 &amp;middot; p=0.756&lt;/td&gt; 
+&lt;/tr&gt;
+ 
+&lt;/table&gt;
+
+---
+## Otro amigo... `sjPlot::sjt.xtab()`
+
+
+```r
+sjPlot::sjt.xtab(datos3$sexo, datos3$educ, show.cell.prc = TRUE) # Porcentaje por filas
+```
+
+&lt;table style="border-collapse:collapse; border:none;"&gt;
+ &lt;tr&gt;
+ &lt;th style="border-top:double; text-align:center; font-style:italic; font-weight:normal; border-bottom:1px solid;" rowspan="2"&gt;sexo&lt;/th&gt;
+ &lt;th style="border-top:double; text-align:center; font-style:italic; font-weight:normal;" colspan="4"&gt;educ&lt;/th&gt;
+ &lt;th style="border-top:double; text-align:center; font-style:italic; font-weight:normal; font-weight:bolder; font-style:italic; border-bottom:1px solid; " rowspan="2"&gt;Total&lt;/th&gt;
+ &lt;/tr&gt;
+ 
+&lt;tr&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Primaria completa&lt;/td&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Secundaria&lt;br&gt;incompleta&lt;/td&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Sin educación formal&lt;/td&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Terciaria y&lt;br&gt;postitulo&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+&lt;tr&gt; 
+&lt;td style="padding:0.2cm;  text-align:left; vertical-align:middle;"&gt;Hombre&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1283&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.8&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1238&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.4&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1320&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;13.2&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1279&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.8&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;  "&gt;&lt;span style="color:black;"&gt;5120&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;51.2&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt; 
+&lt;/tr&gt;
+ 
+&lt;tr&gt; 
+&lt;td style="padding:0.2cm;  text-align:left; vertical-align:middle;"&gt;Mujer&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1213&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.1&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1207&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.1&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1219&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.2&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1241&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.4&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;  "&gt;&lt;span style="color:black;"&gt;4880&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;48.8&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt; 
+&lt;/tr&gt;
+ 
+&lt;tr&gt; 
+&lt;td style="padding:0.2cm;  border-bottom:double; font-weight:bolder; font-style:italic; text-align:left; vertical-align:middle;"&gt;Total&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2496&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;25&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2445&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;24.4&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2539&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;25.4&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2520&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;25.2&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;10000&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;100&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt; 
+&lt;/tr&gt;
+&lt;td style="text-align:right; font-size:0.9em; font-style:italic; padding:0.2cm;" colspan="6"&gt;&amp;chi;&lt;sup&gt;2&lt;/sup&gt;=1.188 &amp;middot; df=3 &amp;middot; Cramer's V=0.011 &amp;middot; p=0.756&lt;/td&gt; 
+&lt;/tr&gt;
+ 
+&lt;/table&gt;
+
+---
+## Otro amigo... `sjPlot::sjt.xtab()`
+
+
+```r
+sjPlot::sjt.xtab(datos3$sexo, datos3$educ, show.col.prc = TRUE) # Porcentaje por filas
+```
+
+&lt;table style="border-collapse:collapse; border:none;"&gt;
+ &lt;tr&gt;
+ &lt;th style="border-top:double; text-align:center; font-style:italic; font-weight:normal; border-bottom:1px solid;" rowspan="2"&gt;sexo&lt;/th&gt;
+ &lt;th style="border-top:double; text-align:center; font-style:italic; font-weight:normal;" colspan="4"&gt;educ&lt;/th&gt;
+ &lt;th style="border-top:double; text-align:center; font-style:italic; font-weight:normal; font-weight:bolder; font-style:italic; border-bottom:1px solid; " rowspan="2"&gt;Total&lt;/th&gt;
+ &lt;/tr&gt;
+ 
+&lt;tr&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Primaria completa&lt;/td&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Secundaria&lt;br&gt;incompleta&lt;/td&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Sin educación formal&lt;/td&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Terciaria y&lt;br&gt;postitulo&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+&lt;tr&gt; 
+&lt;td style="padding:0.2cm;  text-align:left; vertical-align:middle;"&gt;Hombre&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1283&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;51.4&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1238&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;50.6&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1320&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;52&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1279&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;50.8&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;  "&gt;&lt;span style="color:black;"&gt;5120&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;51.2&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt; 
+&lt;/tr&gt;
+ 
+&lt;tr&gt; 
+&lt;td style="padding:0.2cm;  text-align:left; vertical-align:middle;"&gt;Mujer&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1213&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;48.6&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1207&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;49.4&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1219&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;48&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1241&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;49.2&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;  "&gt;&lt;span style="color:black;"&gt;4880&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;48.8&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt; 
+&lt;/tr&gt;
+ 
+&lt;tr&gt; 
+&lt;td style="padding:0.2cm;  border-bottom:double; font-weight:bolder; font-style:italic; text-align:left; vertical-align:middle;"&gt;Total&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2496&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;100&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2445&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;100&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2539&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;100&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2520&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;100&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;10000&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;100&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt; 
+&lt;/tr&gt;
+&lt;td style="text-align:right; font-size:0.9em; font-style:italic; padding:0.2cm;" colspan="6"&gt;&amp;chi;&lt;sup&gt;2&lt;/sup&gt;=1.188 &amp;middot; df=3 &amp;middot; Cramer's V=0.011 &amp;middot; p=0.756&lt;/td&gt; 
+&lt;/tr&gt;
+ 
+&lt;/table&gt;
+
+---
+## Otro amigo... `sjPlot::sjt.xtab()`
+
+
+```r
+sjPlot::sjt.xtab(datos3$sexo, datos3$educ, show.cell.prc = TRUE, show.col.prc = TRUE) # Ambos porcentjaes
+```
+
+&lt;table style="border-collapse:collapse; border:none;"&gt;
+ &lt;tr&gt;
+ &lt;th style="border-top:double; text-align:center; font-style:italic; font-weight:normal; border-bottom:1px solid;" rowspan="2"&gt;sexo&lt;/th&gt;
+ &lt;th style="border-top:double; text-align:center; font-style:italic; font-weight:normal;" colspan="4"&gt;educ&lt;/th&gt;
+ &lt;th style="border-top:double; text-align:center; font-style:italic; font-weight:normal; font-weight:bolder; font-style:italic; border-bottom:1px solid; " rowspan="2"&gt;Total&lt;/th&gt;
+ &lt;/tr&gt;
+ 
+&lt;tr&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Primaria completa&lt;/td&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Secundaria&lt;br&gt;incompleta&lt;/td&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Sin educación formal&lt;/td&gt;
+ &lt;td style="border-bottom:1px solid; text-align:center; padding:0.2cm;"&gt;Terciaria y&lt;br&gt;postitulo&lt;/td&gt;
+ &lt;/tr&gt;
+ 
+&lt;tr&gt; 
+&lt;td style="padding:0.2cm;  text-align:left; vertical-align:middle;"&gt;Hombre&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1283&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;51.4&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.8&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1238&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;50.6&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.4&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1320&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;52&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;13.2&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1279&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;50.8&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.8&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;  "&gt;&lt;span style="color:black;"&gt;5120&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;51.2&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;51.2&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt; 
+&lt;/tr&gt;
+ 
+&lt;tr&gt; 
+&lt;td style="padding:0.2cm;  text-align:left; vertical-align:middle;"&gt;Mujer&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1213&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;48.6&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.1&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1207&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;49.4&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.1&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1219&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;48&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.2&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center; "&gt;&lt;span style="color:black;"&gt;1241&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;49.2&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;12.4&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;  "&gt;&lt;span style="color:black;"&gt;4880&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;48.8&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;48.8&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt; 
+&lt;/tr&gt;
+ 
+&lt;tr&gt; 
+&lt;td style="padding:0.2cm;  border-bottom:double; font-weight:bolder; font-style:italic; text-align:left; vertical-align:middle;"&gt;Total&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2496&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;100&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;25&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2445&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;100&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;24.4&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2539&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;100&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;25.4&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;2520&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;100&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;25.2&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt;
+&lt;td style="padding:0.2cm; text-align:center;   border-bottom:double;"&gt;&lt;span style="color:black;"&gt;10000&lt;/span&gt;&lt;br&gt;&lt;span style="color:#339933;"&gt;100&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;br&gt;&lt;span style="color:#993333;"&gt;100&amp;nbsp;&amp;#37;&lt;/span&gt;&lt;/td&gt; 
+&lt;/tr&gt;
+&lt;td style="text-align:right; font-size:0.9em; font-style:italic; padding:0.2cm;" colspan="6"&gt;&amp;chi;&lt;sup&gt;2&lt;/sup&gt;=1.188 &amp;middot; df=3 &amp;middot; Cramer's V=0.011 &amp;middot; p=0.756&lt;/td&gt; 
+&lt;/tr&gt;
+ 
+&lt;/table&gt;
+---
+
+# 3. 📈 Continua + Continua:
+## 🔗 Correlación de Pearson
+
+--
+
+.large[Es una medida que cuantifica la **fuerza y dirección** de la relación lineal entre dos variables numéricas]
+
+--
+
+.large[También se conoce como **coeficiente de correlación de Pearson** o simplemente **r**.]
+
+---
+## 🔗 Correlación de Pearson
+### 🧮 Definición matemática
+
+--
+
+La covarianza dividida por el producto de las desviaciones estándar de cada variable
+
+--
+
+$$
+r = \frac{\sum (X_i - \bar{X})(Y_i - \bar{Y})}
+         {\sqrt{\sum (X_i - \bar{X})^2} \cdot \sqrt{\sum (Y_i - \bar{Y})^2}}
+$$
+
+--
+
+También puede expresarse como:
+
+--
+
+$$
+r = \frac{\text{Cov}(X, Y)}{\sigma_X \cdot \sigma_Y}
+$$
+
+---
+## 🔗 Correlación de Pearson
+### 📈 Interpretación
+
+--
+
+- **r = 1**: correlación perfectamente positiva  
+- **r = -1**: correlación perfectamente negativa  
+- **r = 0**: no hay relación lineal
+
+---
+## 🔗 Correlación de Pearson
+### 💻 En R
+
+--
+
+```r
+cor(x, y)
+```
+
+--
+
+Veamos un ejemplo
+
+--
+
+
+```r
+cor(datos$edad, datos$ingresos)
+```
+
+```
+## [1] 0.8814577
+```
+
+---
+# 3. 📈 Continua + Continua:
+## Gráficos de dispersión (_scatter plot_)
+
+--
+
+Creemos unos datos de ejemplo...
+
+
+```r
+set.seed(123)
+
+datos4 &lt;- data.frame(
+  edad = sample(18:99, 1000, replace = TRUE)
+)
+
+# Relación moderada: ingresos dependen parcialmente de la edad + ruido
+datos4$ingresos &lt;- datos4$edad * 30000 + rnorm(1000, mean = 0, sd = 300000)
+
+# Asegurarse de que los ingresos sean positivos
+datos4$ingresos &lt;- ifelse(datos4$ingresos &lt; 0, 0, datos4$ingresos)
+```
+
+---
+## Gráficos de dispersión (_scatter plot_)
+
+
+
+
+.pull-left[
+![](04-bivariados_files/figure-html/unnamed-chunk-15-1.png)&lt;!-- --&gt;
+]
+
+.pull-right[.large[**¿Qué se puede interpretar de acá? 🧐**]]
+
+---
+class: middle, center, inverse
+
+# _2. Análisis bivariado inferencial_
+
+---
+# 1. Categórica + Continua 📏
+## Prueba t 🎉
+
+--
+
+.large[La prueba más común para este tipo de combinación de variables]
+
+--
+
+.large[Permite conocer si las **diferencias entre las medias de dos grupos distintos** son estadísticamente significativas]
+
+--
+
+.large[Por ejemplo:]
+
+--
+
+`\(H_0:\)` No existen diferencias entre los ingresos medios de hombres y mujeres
+
+`\(H_1:\)` Existen diferencias entre los ingresos medios de hombres y mujeres
+
+---
+# 1. Categórica + Continua 📏
+## Prueba t 🎉
+
+--
+
+.large[También, si los antecedentes o la teoría lo permite, se pueden contrastar hipótesis **direccionales**. Es decir...]
+
+--
+
+### Mayor a...
+
+`\(H_0:\)` Los ingresos medios de los hombres son menores o iguales a los de las mujeres
+
+`\(H_1:\)` Los ingresos medios de los hombres son mayores a los de las mujeress
+
+---
+# 1. Categórica + Continua 📏
+## Prueba t 🎉
+
+--
+
+.large[También, si los antecedentes o la teoría lo permite, se pueden contrastar hipótesis **direccionales**. Es decir...]
+
+--
+
+### Menor a...
+
+`\(H_0:\)` Los ingresos medios de los hombres son mayores o iguales a los de las mujeres
+
+`\(H_1:\)` Los ingresos medios de los hombres son menores a los de las mujeres
+
+---
+## Prueba t 🎉
+### En R 💻
+
+--
+
+Creemos otros datos de ejemplo...
+
+
+```r
+set.seed(1)
+
+datos6 &lt;- data.frame(
+  sexo = rep(c("Hombre", "Mujer"), each = 50),
+  ingresos = c(rnorm(50, mean = 1800000, sd = 200000),  # Hombres con media más alta
+               rnorm(50, mean = 1500000, sd = 200000)))  # Mujeres con media más baja
+```
+
+---
+## Prueba t 🎉
+### En R 💻
+
+--
+
+
+```r
+t.test(ingresos ~ sexo, data = datos6) # No direccional
+```
+
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  ingresos by sexo
+## t = 8.2146, df = 95.793, p-value = 0.000000000001009
+## alternative hypothesis: true difference in means between group Hombre and group Mujer is not equal to 0
+## 95 percent confidence interval:
+##  224946.2 368302.6
+## sample estimates:
+## mean in group Hombre  mean in group Mujer 
+##              1820090              1523465
+```
+
+--
+
+.large[¿Qué podemos decir de este resultado? 🧐]
+
+---
+## Prueba t 🎉
+### En R 💻
+
+--
+
+
+```r
+t.test(ingresos ~ sexo, data = datos6, alternative = "greater") # Direccional: mayor a
+```
+
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  ingresos by sexo
+## t = 8.2146, df = 95.793, p-value = 0.0000000000005046
+## alternative hypothesis: true difference in means between group Hombre and group Mujer is greater than 0
+## 95 percent confidence interval:
+##  236650    Inf
+## sample estimates:
+## mean in group Hombre  mean in group Mujer 
+##              1820090              1523465
+```
+
+--
+
+.large[¿Qué podemos decir de estos resultados? 🧐]
 
 ---
 
-## 3. Dos variables continuas
+## Prueba t 🎉
+### En R 💻
 
-- Correlación: `cor(x, y)`
-- Diagrama de dispersión:  
-  `ggplot(datos, aes(x, y)) + geom_point()`
-- Recta de regresión:  
-  `+ geom_smooth(method = "lm")`
+--
 
----
 
-# 🔬 Análisis bivariado inferencial
+```r
+t.test(ingresos ~ sexo, data = datos6, alternative = "less") # Direccional: menor a
+```
 
----
+```
+## 
+## 	Welch Two Sample t-test
+## 
+## data:  ingresos by sexo
+## t = 8.2146, df = 95.793, p-value = 1
+## alternative hypothesis: true difference in means between group Hombre and group Mujer is less than 0
+## 95 percent confidence interval:
+##      -Inf 356598.7
+## sample estimates:
+## mean in group Hombre  mean in group Mujer 
+##              1820090              1523465
+```
 
-## 1. Categórica + Categórica
+--
 
-- Prueba de Chi-cuadrado: `chisq.test()`
-- Requisitos:
-  - Tamaño de muestra
-  - Frecuencias esperadas
-
----
-
-## 2. Categórica + Continua
-
-- Dos grupos: `t.test(continua ~ grupo)`
-- Más de dos grupos:  
-  `modelo &lt;- aov(continua ~ grupo, data = datos)`
-
----
-
-## 3. Dos continuas
-
-- `cor.test(x, y)`
-- Pearson por defecto
-- Spearman para datos no normales u ordinales
+.large[¿Qué podemos decir de estos resultados? 🧐]
 
 ---
+# 2. Categórica + Categórica 🧱
+## Test de Chi-cuadrado
 
-# 🛠 Ejercicio práctico
+--
 
-- Usar una base de datos conocida
-- Aplicar cada tipo de análisis
-- Interpretar resultados
+.large[Es una **prueba estadística** usada para analizar si existe una relación significativa entre dos variables categóricas]
+
+--
+
+.large[Compara las frecuencias observadas con las esperadas bajo la **hipótesis de independencia**]
+
+--
+
+`\(H_0\)`: La variable X e Y son independientes entre si
+
+`\(H_1\)`: La variable X e Y no son independientes entre si
 
 ---
+## Test de Chi-cuadrado
+### Cálcular 🧮
 
-# 📌 Cierre
+--
 
-- El análisis bivariado:
-  - Profundiza la comprensión de los datos.
-  - Da soporte empírico a nuestras preguntas de investigación.
-  - Prepara el camino para análisis multivariados.
+Se basa en la fórmula:
+
+--
+
+$$
+\chi^2 = \sum \frac{(O - E)^2}{E}
+$$
+
+--
+
+Donde:
+
+--
+
+- \( O \): frecuencia observada
+- \( E \): frecuencia esperada bajo la hipótesis de independencia
+
+---
+## Test de Chi-cuadrado
+### Ejemplo 😎
+
+--
+
+Pensemos en un set de datos que contiene dos variables: sexo y preferencia por bebida caliente.
+
+--
+.pull-left[
+.center[Tabla 1. Frecuencias observadas]
+
+|         | Café | Té | Total |
+|---------|------|----|-------|
+| Hombre  | 30   | 10 | 40    |
+| Mujer   | 20   | 40 | 60    |
+| Total   | 50   | 50 | 100   |
+]
+--
+.pull-right[
+Queremos saber si hay asociación entre género y preferencia de bebida. 🧐
+
+Es decir...
+
+`\(H_0\)`: El sexo y la preferencia por bebida caliente son independientes entre si
+
+`\(H_1\)`: El sexo y la preferencia por bebida caliente **no** son independientes entre si
+
+]
+
+---
+## Test de Chi-cuadrado: paso a paso 🧮
+
+(1) ** Calcular frecuencias esperadas**:
+
+.pull-left[
+
+.center[Tabla 1. Frecuencias observadas]
+
+|         | Café | Té | Total |
+|---------|------|----|-------|
+| Hombre  | 30   | 10 | **40**    |
+| Mujer   | 20   | 40 | 60    |
+| Total   | **50**   | 50 | 100   |
+
+]
+
+.pull-right[
 
 
+
+$$
+E_{ij} = \frac{(fila_i) \cdot (columna_j)}{\text{Total}}
+$$
+
+Ejemplo para Hombre-Café:
+
+$$
+E_{Hombre-Café} = \frac{40 \cdot 50}{100} = 20
+$$
+]
+---
+## Test de Chi-cuadrado: paso a paso 🧮
+
+(1) **Calcular frecuencias esperadas**:
+
+.pull-left[
+
+.center[Tabla 1. Frecuencias observadas]
+
+|         | Café | Té | Total |
+|---------|------|----|-------|
+| Hombre  | 30   | 10 | 40    |
+| Mujer   | 20   | 40 | 60    |
+| Total   | 50   | 50 | 100   |
+
+]
+
+.pull-right[
+
+.center[Tabla 2. Frecuencias esperadas]
+
+|         | Café | Té | Total |
+|---------|------|----|-------|
+| Hombre  | `\(\frac{40 \cdot 50}{100} = 20\)`   | `\(\frac{40 \cdot 50}{100} = 20\)` | 40    |
+| Mujer   | `\(\frac{60 \cdot 50}{100} = 30\)`   | `\(\frac{60 \cdot 50}{100} = 30\)` | 60    |
+| Total   | 50   | 50 | 100   |
+
+]
+
+---
+## Test de Chi-cuadrado: paso a paso 🧮
+
+(2) **Calcular Chi-cuadrado parcial (por celda)**
+
+.pull-left[
+
+.center[Tabla 1. Frecuencias observadas]
+
+|         | Café | Té | Total |
+|---------|------|----|-------|
+| Hombre  | 30   | 10 | 40    |
+| Mujer   | 20   | 40 | 60    |
+| Total   | 50   | 50 | 100   |
+
+]
+
+.pull-right[
+
+.center[Tabla 2. Frecuencias esperadas]
+
+|         | Café | Té | Total |
+|---------|------|----|-------|
+| Hombre  | `\(\frac{40 \cdot 50}{100} = 20\)`   | `\(\frac{40 \cdot 50}{100} = 20\)` | 40    |
+| Mujer   | `\(\frac{60 \cdot 50}{100} = 30\)`   | `\(\frac{60 \cdot 50}{100} = 30\)` | 60    |
+| Total   | 50   | 50 | 100   |
+
+]
+
+`\(\chi^2_{ij} = \frac{(O - E)^2}{E}\)`
+
+`\(\chi^2_{Hombre-Café} = \frac{(30 - 20)^2}{20} = \frac{100}{20} = 5\)`
+
+Se repite para cada celda, luego se suman todos los valores.
+
+---
+## Test de Chi-cuadrado: paso a paso 🧮
+
+(3) **Chi-cuadrado total**:
+
+.pull-left[
+
+.center[Tabla 1. Frecuencias observadas]
+
+|         | Café | Té | Total |
+|---------|------|----|-------|
+| Hombre  | 30   | 10 | 40    |
+| Mujer   | 20   | 40 | 60    |
+| Total   | 50   | 50 | 100   |
+
+
+
+.left[
+Recordemos la formula:
+`\(\chi^2 = \sum \frac{(O - E)^2}{E}\)`
+]
+
+]
+
+.pull-right[
+
+.center[Tabla 2. Frecuencias esperadas]
+
+|         | Café | Té | Total |
+|---------|------|----|-------|
+| Hombre  | `\(\frac{40 \cdot 50}{100} = 20\)`   | `\(\frac{40 \cdot 50}{100} = 20\)` | 40    |
+| Mujer   | `\(\frac{60 \cdot 50}{100} = 30\)`   | `\(\frac{60 \cdot 50}{100} = 30\)` | 60    |
+| Total   | 50   | 50 | 100   |
+
+.left[
+Apliquemosla:
+
+`\(\chi^2 = \frac{(30 - 20)^2}{20} + \frac{(10 - 20)^2}{20} + \frac{(20 - 30)^2}{30} + \frac{(40 - 30)^2}{30}\)`
+
+`\(\chi^2 = 5 + 5 + 3.33 + 3.33 = 16.66\)`
+]
+]
+
+---
+## Test de Chi-cuadrado
+### Cálculo en R 💻
+
+
+```r
+# Crear un dataframe simulado
+datos5 &lt;- data.frame(
+  genero = c(rep("Hombre", 40), rep("Mujer", 60)),
+  bebida = c(rep("Café", 30), rep("Té", 10), rep("Café", 20), rep("Té", 40))
+)
+
+chisq.test(datos5$genero, datos5$bebida, correct = FALSE)
+```
+
+```
+## 
+## 	Pearson's Chi-squared test
+## 
+## data:  datos5$genero and datos5$bebida
+## X-squared = 16.667, df = 1, p-value = 0.00004456
+```
+¿Qué podemos concluir? 🧐
+
+---
+# 3. 📈 Continua + Continua:
+## 🔗 Correlación de Pearson
+
+--
+
+.large[Anteriormente, vimos la funciónm para obtener la **magnitud** del coeficiente de correlación (`cor()`), pero...]
+
+--
+
+.large[¿Cómo conocemos su información relativa a la inferencia estadística? 🧐]
+
+--
+
+Con: `cor.test()`
+
+---
+# 3. 📈 Continua + Continua:
+## 🔗 Correlación de Pearson
+
+--
+
+
+```r
+cor.test(datos4$edad, datos4$ingresos)
+```
+
+```
+## 
+## 	Pearson's product-moment correlation
+## 
+## data:  datos4$edad and datos4$ingresos
+## t = 76.345, df = 998, p-value &lt; 0.00000000000000022
+## alternative hypothesis: true correlation is not equal to 0
+## 95 percent confidence interval:
+##  0.9144019 0.9325877
+## sample estimates:
+##       cor 
+## 0.9240157
+```
+
+--
+
+.large[¿Qué podemos decir de este resultado? 🧐]
+
+--
+
+.large[¿Qué hipótesis pusimos a prueba? 🔎]
 
 ---
 class: middle, center, inverse
@@ -243,9 +1123,9 @@ class: middle, center, inverse
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script src="https://jciturras.github.io/ayudantia-sol3051/slides/00-intro-r/macros.js"></script>
 <script>var slideshow = remark.create({
-  "ratio": "16:9",
-  "countIncrementalSlides": false,
-  "slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n"
+"ratio": "16:9",
+"countIncrementalSlides": false,
+"slideNumberFormat": "<div class=\"progress-bar-container\">\n  <div class=\"progress-bar\" style=\"width: calc(%current% / %total% * 100%);\">\n  </div>\n</div>\n"
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
